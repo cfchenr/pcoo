@@ -1,19 +1,23 @@
-import java.util.*;
 import pt.ua.concurrent.*;
+import log.*;
+import java.util.*;
+import java.io.*;
 
 public class Railway {
 
     private BinarySemaphore semaphoreTrain;
     private int number;
-    private boolean state;
+    private boolean busy;
     private Train train;
+    private Train reserve;
 
     public Railway (int number) {
 
         semaphoreTrain = new BinarySemaphore(1);
         this.number = number;
-        state = true;
+        busy = false;
         train = null;
+        reserve = null;
 
     }
 
@@ -23,9 +27,9 @@ public class Railway {
 
     }
 
-    public boolean gState () {
+    public boolean isBusy () {
 
-        return state;
+        return busy;
 
     }
 
@@ -35,29 +39,31 @@ public class Railway {
 
     }
 
-    public void sState (boolean tf) {
+    public void sReserve (Train train) {
 
-        state = tf;
-
-    }
-
-    public void sTrain (Train train) {
-
-        this.train = train;
+        reserve = train;
 
     }
 
-    public void aTrain () {
+    public Train gReserve () {
+
+        return reserve;
+
+    }
+
+    public void aTrain (Train train) {
 
         semaphoreTrain.acquire();
-        state = false;
+        busy = true;
+        this.train = train;
 
     }
 
     public void dTrain () {
 
+        reserve = null;
         train = null;
-        state = true;
+        busy = false;
         semaphoreTrain.release();
 
     }
