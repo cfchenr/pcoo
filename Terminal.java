@@ -15,19 +15,23 @@ public class Terminal {
     private boolean close;
     private Position position;
 
-    public Terminal (String name, int x, CCO cco) throws IOException {
+    public Terminal (String name, int x, CCO cco) {
 
         this.name = name;
+        
         lRailway = new Railway (1);
         uRailway = new Railway (2);
-        log = new WriteLogFile("output/terminal" + name + ".txt");
+
         lContentors = new ArrayList<Contentor>();
         uContentors = new ArrayList<Contentor>();
-        this.cco = cco;
+
         slMutex = new BinarySemaphore(1);
         suMutex = new BinarySemaphore(1);
-        close = false;
         position = new Position(x);
+
+        close = false;
+
+        this.cco = cco;
         cco.aTerminal(this);
 
     }
@@ -74,37 +78,63 @@ public class Terminal {
 
     }
 
-    public boolean ghmContentores (Train train, Terminal terminal) {
+    public boolean ghmContentores (Train train) {
 
         boolean check = false;
 
-        for (int i = 0; i < lContentors.size(); i++) {
+        for (int i = 0; i < lContentors.size(); i++)
 
-            if (lContentors.get(i).gTrain() == null) {
+            if (lContentors.get(i).gTrain() == null || lContentors.get(i).gTrain() == train) {
 
-                if (lContentors.get(i).gDestination() == terminal) {
+                check = true;
+                train.sDestination(lContentors.get(i).gDestination());
+                break;
 
-                    check = true;
-                    lContentors.get(i).sTrain(train);
+            }
 
-                    System.out.println("Contentores com o mesmo destino do comboio.");
+        if (check) {
 
-                } else if (terminal.gPosition().gDistance(lContentors.get(i).gDestination().gPosition()) < position.gDistance(lContentors.get(i).gDestination().gPosition())) {
+            Stack<Terminal> select = new Stack<Terminal>();
+            select.add(train.gSource());
+            select.add(train.gDestination());
 
-                    check = true;
-                    lContentors.get(i).sTrain(train);
+            int size = 0;
+            boolean close = false;
 
-                    System.out.println("O terminal passado no argumento fica mais próximo do destino do contentor do que o terminal onde o contentor está.");
+            while (lContentors.size() > 0 && close == false) {
 
-                } else {
+                for (int i = 0; i < lContentors.size(); i++) {
 
-                    System.out.println("Fica mais longe.");
+                    if (lContentors.get(i).gTrain() == null && lContentors.get(i).gDestination() == select.peek() && size < train.gmContentores()) {
+
+                        lContentors.get(i).sTrain(train);
+                        size++;
+
+                    }
+
+                    if (size == train.gmContentores())
+                        break;
 
                 }
 
-            } else if (lContentors.get(i).gTrain() == train) {
+                if (size == train.gmContentores())
+                    break;
+   
+                Terminal selectT = this;
+                double minDistance = position.gDistance(train.gDestination().gPosition());
+                close = true;
 
-                check = true;
+                for (int i = 0; i < cco.gTerminals().size(); i++)
+
+                    if (!select.contains(cco.gTerminals().get(i)) && position.gDistance(cco.gTerminals().get(i).gPosition()) > train.gDestination().gPosition().gDistance(cco.gTerminals().get(i).gPosition())) {
+                        
+                        selectT = cco.gTerminals().get(i);
+                        close = false;
+
+                    }
+
+
+                select.add(selectT);
 
             }
 
@@ -138,35 +168,6 @@ public class Terminal {
 
     }
 
-    public void srlContentores (Train train) throws InterruptedException {
-
-        slMutex.acquire();
-
-        System.out.print("Terminal " + name + " as reserved contentor ");
-
-        int i = 0;
-
-        for (int j = 0; j < lContentors.size(); j++) {        
-
-            if (lContentors.get(j).gTrain() == null) {
-                if ((train.gDestination().gPosition().gDistance(lContentors.get(j).gDestination().gPosition()) < position.gDistance(lContentors.get(j).gDestination().gPosition())) && i < train.gmContentores()) {
-
-                    lContentors.get(j).sTrain(train);
-                    System.out.print(" " + lContentors.get(j).gNumber() + " ");
-                    i++;
-                
-                }
-
-            }
-
-        }
-
-        System.out.println(" for train " + train.gNumber());
-
-        slMutex.release();
-
-    }
-
     private void suContentores (Train train) throws InterruptedException {
 
         for (int i = 0; i < train.gContentores().size(); i++)
@@ -177,25 +178,55 @@ public class Terminal {
     public void sLoad (Train train) throws InterruptedException {
 
         slMutex.acquire();
-
-        System.out.print(train.gNumber() + " go load at " + name + ":");
-
         lRailway.aTrain(train);
 
-        for (int i = 0; i < lContentors.size(); i++)
+        Stack<Terminal> select = new Stack<Terminal>();
+        select.add(train.gSource());
+        select.add(train.gDestination());
 
-            if (lContentors.get(i).gTrain() == train) {
+        int size = 0;
+        boolean close = false;
 
-                train.aContentor(lContentors.get(i));
-                System.out.println(" [" + lContentors.get(i).gNumber() + "] ");
-                lContentors.remove(i);
+        while (size < train.gmContentores() && close == false) {
+
+            for (int i = 0; i < lContentors.size(); i++) {
+
+                if ((lContentors.get(i).gTrain() == null || lContentors.get(i).gTrain() == train) && lContentors.get(i).gDestination() == select.peek() && size < train.gmContentores()) {
+
+                    train.aContentor(lContentors.get(i));
+                    lContentors.remove(i);
+                    i--;
+                    Thread.sleep((long)(1250));
+                    size++;
+
+                }
+
+                if (size == train.gmContentores())
+                    break;
 
             }
 
+            if (size == train.gmContentores())
+                break;
+               
+            Terminal selectT = this;
+            double minDistance = position.gDistance(train.gDestination().gPosition());
+            close = true;
+
+            for (int i = 0; i < cco.gTerminals().size(); i++)
+
+                if (!select.contains(cco.gTerminals().get(i)) && position.gDistance(cco.gTerminals().get(i).gPosition()) > train.gDestination().gPosition().gDistance(cco.gTerminals().get(i).gPosition())) {
+                
+                    selectT = cco.gTerminals().get(i);
+                    close = false;
+
+                }
+
+            select.add(selectT);
+        
+        }
+
         lRailway.dTrain();
-
-        System.out.println(train.gNumber() + " finish load at " + name + ".");
-
         slMutex.release();
 
     }
@@ -203,27 +234,22 @@ public class Terminal {
     public void sUnload (Train train) throws InterruptedException {
 
         suMutex.acquire();
-
-        System.out.print(train.gNumber() + " go unload at " + name + ":");
-
         suContentores(train);
-
         uRailway.aTrain(train);
 
         while (!train.isEmpty()) {
-            if (train.gContentores().peek().gDestination() == this) {
-                System.out.println(" [" + train.gContentores().peek().gNumber() + "] ");
+
+            if (train.gContentores().peek().gDestination() == this)
                 uContentors.add(train.gContentores().pop());
-            } else {
-                System.out.println(" {" + train.gContentores().peek().gNumber() + "} ");
+
+            else
                 lContentors.add(train.gContentores().pop());
-            }
+
+            Thread.sleep((long)(1250));
+
         }
 
         uRailway.dTrain();
-
-        System.out.println(train.gNumber() + " finish unload at " + name + ".");
-
         suMutex.release();
 
     }

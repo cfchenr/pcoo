@@ -1,4 +1,7 @@
 import java.util.*;
+
+import javax.net.ssl.TrustManager;
+
 import pt.ua.concurrent.*;
 
 public class Train implements Runnable {
@@ -15,19 +18,25 @@ public class Train implements Runnable {
 
         this.number = number;
         this.source = source;
-        this.destination = destination;
+        this.destination = null;
+
         mContentores = (int)(Math.random()*((40 - 15) + 1) + 15);
         velocity = (int)(Math.random()*((180 - 110) + 1) + 110);
+
         this.contentores = new Stack<Contentor>();
         this.cco = cco;
+
         close = false;
         services = false;
         sServices = false;
         dServices = false;
+
         permitionToLoad = false;
         permitionToUnload = false; 
         permitionToWait = false;    
+
         position = source.gPosition();
+
         state = "stop";
         cco.aTrain(this);
 
@@ -36,179 +45,61 @@ public class Train implements Runnable {
     public void run () {
 
         try {
-/* 
-            boolean close = true;
 
             do {
 
-                System.out.print(number + " ha terminais abertos?");
-                cco.sTerminalClose();
-
-                close = true;
-                for (int c = 0; c < cco.gTerminals().size(); c++)
-                    if (!cco.gTerminals().get(c).gClose())
-                        close = false;
-
-                if (!close)
-                    System.out.println(" Sim.");
-                else {
-                    state = "stop";
-                    System.out.println(" Nao.");
-                }
-
-                System.out.print(number + " ha servicos?");
-                cco.sServices(this);
-
-                if (sServices) {
-
-                    System.out.println(" Sim, na origem.");
-
-                    do {
-
-                        System.out.print(number + " tem permicao para carregar em " + source.gName() + "?");
-                        cco.slPermition(this);
-
-                        if (permitionToLoad) {
-                            state = "load";
-                            System.out.println(" Sim.");
-                            break;
-                        }
-                        else {
-
-                            if (source.glRailway().gTrain() != null)
-                                System.out.println(" Nao. Linha reservada para o comboio " + source.glRailway().gReserve().gNumber());
-                            else
-                                System.out.println(" Nao.")
-                                ;
-                        }
-
-                        System.out.print(number + " ainda ha servicos na origem?");
-                        cco.sServices(this);
-
-                        if (sServices)
-                            System.out.println(" Sim.");
-                        else
-                            System.out.println(" Nao.");
-
-                        Thread.sleep((long)(10000));
-
-                    } while (sServices || permitionToWait);
-                    
-                    if (sServices) {
-
-                        System.out.println(number + " a carregar...");
-                        source.sLoad(this);
-                        Thread.sleep((long)(contentores.size()*100));
-                        System.out.println(number + " terminou de carregar");
-
-                        state = "transit";
-                        goToDestination();
-
-                        do {
-        
-                            System.out.print(number + " tem permicao para descarregar em " + source.gName() + "?");
-                            cco.suPermition(this);
-        
-                            if (permitionToUnload) {
-                                state = "unload";
-                                System.out.println(" Sim.");
-                            } else 
-                                System.out.println(" Nao. Linha reservada para o comboio " + source.guRailway().gReserve().gNumber());
-
-                            Thread.sleep((long)(10000));
-                            
-                        } while (permitionToWait);
-
-                        if (permitionToUnload) {
-                         
-                            System.out.println(number + " a descarregar...");
-                            Thread.sleep((long)(contentores.size()*100));
-                            source.sUnload(this);
-                            System.out.println(number + " terminou de descarregar");
-
-                            state = "stop";
-
-                        }
-
-                    }
-
-                } else if (dServices) {
-
-                    System.out.println(" Sim, no destino.");
-                    state = "transit";
-                    goToDestination();
-
-                } else {
-
-                    state = "stop";
-                    System.out.println(" Nao.");
-                    Thread.sleep((long)(10000));
-
-                }
-
-                Thread.sleep((long)(20000));
-            
-            } while (!(!services && close));     
-            */ 
-            
-
-            do {
-
+                // Se o comboio estiver carregado, aguarda permissão para descarregar, descarrega e pára (aguarda por novos serviços)
                 if (contentores.size() > 0) {
 
-                    state = "unload";
-
                     do {
 
-                        Thread.sleep(5000);                
+                        state = "waiting for unloading";
 
                         cco.suPermition(this);
 
                     } while (!permitionToUnload);
 
+                    state = "unloading";
+
                     source.sUnload(this);
 
-                    cDirection();
+                    sServices = false;
+                    dServices = false;
+                    state = "stop";
 
+                // Se estiver descarregado e se há serviços onde está, aguarda permissão para carregar, carrega e vai para o seu destino
+                } else if (sServices) {
+
+                    do {
+
+                        state = "waiting for load";
+
+                        cco.slPermition(this);
+
+                    } while (!permitionToLoad);
+
+                    state = "loading";   
+
+                    source.sLoad(this);
+
+                    goToDestination();             
+
+                // Se estiver descarregado e se há serviços noutro local, vai para lá
+                } else if (dServices) {
+
+                    goToDestination();
+
+                    sServices = false;
+                    dServices = false;
+
+                // Se estiver descarregado e não há serviços, pára
                 } else {
 
-                    cco.sServices(this);
-
-                    if (services) {
-
-                        state = "load";
-
-                        if (dServices) {
-
-                            goToDestination();
-
-                        }
-
-                        do {
-
-                            Thread.sleep(5000);                
-
-                            cco.slPermition(this);
-
-                        } while (!permitionToLoad);
-
-                        source.sLoad(this);
-
-                        cDirection();
-
-                    } else {
-
-                        state = "stop";
-
-                    }
+                    state = "stop";
 
                 }
-
-                Thread.sleep(20000);                
-
-                cco.sClose(this);
-
-            } while (!close);
+                
+            } while (true);
 
 
         } catch (InterruptedException e) {
@@ -216,62 +107,26 @@ public class Train implements Runnable {
             e.printStackTrace();
 
         }
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");        
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===================================== " + number + " =====================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        System.out.println("===============================================================================");
-        //System.exit(0);
 
     }
 
     public void cDirection () throws InterruptedException {
 
-        System.out.println(number + " a mudar de direcao...");
-        Thread.sleep((long)(100));
+        Thread.sleep((long)(1250));
         Terminal temp = source;
         source = destination;
         destination = temp;
-        System.out.println(number + " terminou de mudar de direcao.");
-
 
     }
 
     public void goToDestination () throws InterruptedException {
 
-        cDirection();
-        System.out.println(number + " em marcha de " + source.gName() + " para a estacao destino " + destination.gName() + "...");
-        Thread.sleep((long)(5000));
+        state = "in transit";
+
+        Thread.sleep((long)(1250*source.gPosition().gDistance(destination.gPosition())/velocity));
         position = destination.gPosition();
-        System.out.println(number + " chegou ao destino " + source.gName());
+
+        cDirection();
 
     }
 
@@ -293,6 +148,12 @@ public class Train implements Runnable {
 
     }
 
+    public void sDestination (Terminal destination) {
+
+        this.destination = destination;
+
+    }
+
     public int gmContentores () {
 
         return mContentores;
@@ -302,24 +163,6 @@ public class Train implements Runnable {
     public Stack<Contentor> gContentores () {
 
         return contentores;
-
-    }
-
-    public boolean gServices () {
-
-        return (sServices || dServices);
-
-    }
-
-    public boolean gsServices () {
-
-        return sServices;
-
-    }
-
-    public boolean gdServices () {
-
-        return dServices;
 
     }
 
@@ -353,24 +196,23 @@ public class Train implements Runnable {
         
     }
 
-    public void sServices () {
+    public void sState (String state) {
 
-        if (sServices || dServices)
-            services = true;
-        else
-            services = false;
+        this.state = state;
 
     }
 
-    public void ssServices (boolean tf) {
+    public void sServices (boolean tf) {
 
         sServices = tf;
+        dServices = !tf;
 
     }
 
-    public void sdServices (boolean tf) {
+    public void nsServices () {
 
-        dServices = tf;
+        sServices = false;
+        dServices = false;
 
     }
 
@@ -413,12 +255,6 @@ public class Train implements Runnable {
     public boolean isEmpty () {
 
         return contentores.size() == 0;
-
-    }
-
-    public void sClose (boolean tf) {
-
-        close = tf;
 
     }
 
