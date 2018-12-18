@@ -24,14 +24,6 @@ public class programTest extends PApplet {
     
     }
 
-    // public void setup () {
-
-    //     img1 = loadImage("img/container.png");
-    //     img2 = loadImage("img/coal.png");
-    //     img3 = loadImage("img/locomotive.png");
-
-    // }
-
     public void draw () {
 
         background(value);
@@ -160,8 +152,6 @@ public class programTest extends PApplet {
 
         void draw () {
 
-            //rect(x, y, textWidth(label), -25);
-
             text(label, x, y);
 
         }
@@ -258,23 +248,6 @@ public class programTest extends PApplet {
             trains.add(new Thread(new Train(516, tSantarem, tSetubal, cco), "516"));
             trains.add(new Thread(new Train(517, tLisboa, tFaro, cco), "517"));
             trains.add(new Thread(new Train(518, tSetubal, tGuimaraes, cco), "518"));   
-        
-            // for (int k = 0; k < cco.gTerminals().size(); k++) {
-
-            //     //System.out.print(cco.gTerminals().get(k).gName() + " contentores to load: ");
-                
-            //     for (int f = 0; f < cco.gTerminals().get(k).glContentores().size(); f++) 
-            //         //System.out.print(" " + cco.gTerminals().get(k).glContentores().get(f).gNumber() + " [" + cco.gTerminals().get(k).glContentores().get(f).gDestination().gName() + "]");
-                
-            //     //System.out.println();
-            //     //System.out.print(cco.gTerminals().get(k).gName() + " contentores unloaded: ");
-
-            //     for (int f = 0; f < cco.gTerminals().get(k).guContentores().size(); f++) 
-            //         //System.out.print(" " + cco.gTerminals().get(k).guContentores().get(f).gNumber() + " ");
-                
-            //         //System.out.println();
-
-            // }
 
             ccoThread.setDaemon(true);
             ccoThread.start();
@@ -290,18 +263,6 @@ public class programTest extends PApplet {
 
             for(int f = 0; f < trains.size(); f++)
                 trains.get(f).join();
-
-            // for (int k = 0; k < cco.gTerminals().size(); k++) {
-            //     //System.out.print(cco.gTerminals().get(k).gName() + " contentores to load: ");
-            //     for (int f = 0; f < cco.gTerminals().get(k).glContentores().size(); f++) 
-            //         //System.out.print(" " + cco.gTerminals().get(k).glContentores().get(f).gNumber() + " [" + cco.gTerminals().get(k).glContentores().get(f).gDestination().gName() + "]");
-            //     //System.out.println();
-            //     //System.out.print(cco.gTerminals().get(k).gName() + " contentores unloaded: ");
-            //     for (int f = 0; f < cco.gTerminals().get(k).guContentores().size(); f++) 
-            //         //System.out.print(" " + cco.gTerminals().get(k).guContentores().get(f).gNumber());
-            //     //System.out.println();
-            // }
-
 
         } catch (InterruptedException e) {
 
