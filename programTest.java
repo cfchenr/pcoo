@@ -10,121 +10,190 @@ import static java.lang.System.*;
 
 public class programTest extends PApplet {
  
+    static CCO cco;
+    static int contentorNumber = 0;
+
+    PImage img1, img2, img3;
+    ArrayList<Button> terminalButton = new ArrayList<Button>();
+    
+    int value = 100;
+
     public void settings () {
        
         fullScreen();
     
     }
 
-    PImage img1, img2, img3;
+    // public void setup () {
 
-    public void setup () {
+    //     img1 = loadImage("img/container.png");
+    //     img2 = loadImage("img/coal.png");
+    //     img3 = loadImage("img/locomotive.png");
 
-        img1 = loadImage("img/container.png");
-        img2 = loadImage("img/coal.png");
-        img3 = loadImage("img/locomotive.png");
-
-    }
+    // }
 
     public void draw () {
 
-        background(100);
-        fill(255);
+        background(value);
 
         textAlign(PConstants.CENTER);
-        text("Gestão de terminais de carga/descarga", width/2, 30);
+        text("Centro de Comandos e Operações (CCO)", width/2, height/36);
 
+        textAlign(PConstants.LEFT);
+        text("Máquinas em marcha", width/34 + 5, height/14 - 5);
 
-        int line = 0;
-        int line2 = 0;
-        int column = 0;
-        int column2 = 0;
+        rectMode(CORNER);
+        noFill();
+        rect(width/34, height/14, (7*width)/34 - 5, (12*height)/14 - 5);
 
-        for (int k = 0; k < cco.gTerminals().size(); k++) {
+        int line = 1;
+        for (int i = 0; i < cco.gTrains().size(); i++)
+            if (cco.gTrains().get(i).gState() == "in transit")
+                text(cco.gTrains().get(i).gSource().gName() + " " + cco.gTrains().get(i).gNumber() + " " + cco.gTrains().get(i).gDestination().gName(), width/34 + 5, height/14 + (height/38)*line++);
 
+        text("Terminais", 8*width/34 + 5, height/14 - 5);
 
-            line++;
-            line2++;
-            int lineM = max(line, line2);
+        line = 0;
+        for (int i = 0; i < cco.gTerminals().size(); i++) {
 
-            column = 0;
-            column2 = 0;
+            if (i%3 == 0 && i > 0) 
+                line++;
 
-            textAlign(PConstants.LEFT);
+            rect(8*width/34 + (i%3)*(8*width/34), height/14 + line*(3*height/14), 8*width/34 - 5, (3*height)/14 - 5);
 
-            text("Contentores disponíveis em " + cco.gTerminals().get(k).gName() + ": ", width/16, 60 + (40*lineM));
-            text("Contentores descarregados em " + cco.gTerminals().get(k).gName() + ": ", 12*width/16, 60 + (40*lineM));
-
-            line = lineM + 1;
-            line2 = lineM + 1;
-
-            text("A carregar", width/16+(40*column), 60 + (40*line));
-            if (cco.gTerminals().get(k).glRailway().gTrain() != null) {
-                image(img3, width/16+(40*column), 60 + (40*line));
-                for (int f = 0; f < cco.gTerminals().get(k).glRailway().gTrain().gContentores().size(); f++)
-                    image(img1, width/16+(40*++column), 60 + (40*line));
-
-            }
-
-            column = 0;
-                            
-            text("A descarregar", 12*width/16+(40*column2), 60 + (40*line2));
-            if (cco.gTerminals().get(k).guRailway().gTrain() != null) {
-                image(img3, 12*width/16+(40*column2), 60 + (40*line2));
-                for (int f = 0; f < cco.gTerminals().get(k).guRailway().gTrain().gContentores().size(); f++)
-                    image(img1, 12*width/16+(40*++column2), 60 + (40*line2));
-            }
-
-            column2 = 0;
-
-            line++;
-            line2++;
-    
-            for (int f = 0; f < cco.gTerminals().get(k).glContentores().size(); f++) {
-                
-                if (f%12 == 0 && f != 0) {
-
-                    line++;
-                    column = 0;
-
-                }
-
-                text(cco.gTerminals().get(k).glContentores().get(f).gNumber(), width/16+(40*column), 60 + (40*line));
-                image(img1, width/16+(40*column), 60 + (40*line));
-                column++;
-
-            }
-
-            for (int f = 0; f < cco.gTerminals().get(k).guContentores().size(); f++) {
-                
-                if (f%8 == 12 && f != 0) {
-
-                    line2++;
-                    column2 = 0;
-
-                }
-                
-                image(img1, 12*width/16+(40*column2), 60 + (40*line2));
-                text(cco.gTerminals().get(k).guContentores().get(f).gNumber(), 12*width/16+(40*column2), 60 + (40*line2));
-
-                column2++;
-
-            }
+            terminalButton.add(new Button(8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + (height/38), cco.gTerminals().get(i).gName()));
+            terminalButton.get(i).draw();
             
+            text("Máquinas a carregar", 8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 2*(height/38));          
+            if (cco.gTerminals().get(i).glRailway().gTrain() != null)
+                text(cco.gTerminals().get(i).glRailway().gTrain().gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 3*(height/38));
+
+            text("Máquinas a descarregar", 8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 4*(height/38));
+            if (cco.gTerminals().get(i).guRailway().gTrain() != null)
+                text(cco.gTerminals().get(i).guRailway().gTrain().gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 5*(height/38));
+
+            int columnTerminal = 0;
+            int lineTerminal = 1;
+            text("Máquinas estacionadas ou em espera", 8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 6*(height/38));
+            for (int j = 0; j < cco.gTrains().size(); j++)
+                if (cco.gTrains().get(j).gState() != "in transit" && cco.gTrains().get(j).gPosition() == cco.gTerminals().get(i).gPosition() && cco.gTerminals().get(i).glRailway().gTrain() != cco.gTrains().get(j) && cco.gTerminals().get(i).guRailway().gTrain() != cco.gTrains().get(j))
+                    text(cco.gTrains().get(j).gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5 + columnTerminal++*(width/34), height/14 + line*(3*height/14) + 7*(height/38));
+
+                if (columnTerminal % 6 == 0 && columnTerminal != 0) {
+                    columnTerminal = 0;
+                    lineTerminal++;
+                }
+        
+        }
+
+        for (int i = 0; i < terminalButton.size(); i++)
+            if (terminalButton.get(i).gDisplay()) {
+
+                background(value);
+                rect(0,0,width,height);
+
+                textAlign(PConstants.CENTER);
+                text(terminalButton.get(i).gName(), width/2, height/36);
+
+                Terminal temp = cco.gTerminals().get(0);
+
+                for (int j = 0; j < cco.gTerminals().size(); j++)
+                    if (cco.gTerminals().get(j).gName() == terminalButton.get(i).gName())
+                        temp = cco.gTerminals().get(j);
+
+                textAlign(PConstants.LEFT);
+                text("Contentores para carregar", width/34 + 5, height/14 - 5);
+                
+                line = 1;
+                int column = 1;
+                for (int j = 0; j < temp.glContentores().size(); j++) {
+
+                    if (j > 0 && j%20 == 0)
+                        column++;
+
+                    text(temp.glContentores().get(j).gNumber(), column*(width/34 + 5), height/14 + (height/38)*line++);
+
+                }
+
+                text("Contentores descarregados", 17*width/34 + 5, height/14 - 5);
+
+                line = 1;
+                column = 1;
+                for (int j = 0; j < temp.guContentores().size(); j++) {
+
+                    if (j > 0 && j%20 == 0)
+                        column++;
+
+                    text(temp.guContentores().get(j).gNumber(), column*(17*width/34 + 5), height/14 + (height/38)*line++);
+
+                }
+
+
+            }
+
+
+    }
+
+    public void mouseClicked () {
+
+        for (int i = 0; i < terminalButton.size(); i++)
+            if (terminalButton.get(i).over())
+                terminalButton.get(i).sDisplay(true);
+            else
+                terminalButton.get(i).sDisplay(false);
+
+    }
+
+    class Button {
+
+        int x,y;
+        String label;
+        boolean display = false;
+        
+        Button(int x, int y, String label) {
+        
+            this.x = x;
+            this.y = y;
+            this.label = label;
+        
+        }
+
+        void draw () {
+
+            //rect(x, y, textWidth(label), -25);
+
+            text(label, x, y);
+
+        }
+
+        boolean over () {
+
+            if(mouseX >= x && mouseY >= y - 22 && mouseX <= x + textWidth(label) && mouseY <= y)
+                return true;
+
+            return false;
+
+        }
+        
+        void sDisplay (boolean tf) {
+
+            display = tf;
+
+        }
+
+        boolean gDisplay () {
+
+            return display;
+
+        }
+
+        String gName () {
+
+            return label;
+
         }
 
     }
-
-    public void mouseWheel(MouseEvent event) {
-    
-        float e = event.getCount();
-        System.out.println(e);
-    
-    }
-   
-    static CCO cco;
-
-    static int contentorNumber = 0;
 
     public static void main(String[] args) {
 
@@ -190,22 +259,22 @@ public class programTest extends PApplet {
             trains.add(new Thread(new Train(517, tLisboa, tFaro, cco), "517"));
             trains.add(new Thread(new Train(518, tSetubal, tGuimaraes, cco), "518"));   
         
-            for (int k = 0; k < cco.gTerminals().size(); k++) {
+            // for (int k = 0; k < cco.gTerminals().size(); k++) {
 
-                System.out.print(cco.gTerminals().get(k).gName() + " contentores to load: ");
+            //     //System.out.print(cco.gTerminals().get(k).gName() + " contentores to load: ");
                 
-                for (int f = 0; f < cco.gTerminals().get(k).glContentores().size(); f++) 
-                    System.out.print(" " + cco.gTerminals().get(k).glContentores().get(f).gNumber() + " [" + cco.gTerminals().get(k).glContentores().get(f).gDestination().gName() + "]");
+            //     for (int f = 0; f < cco.gTerminals().get(k).glContentores().size(); f++) 
+            //         //System.out.print(" " + cco.gTerminals().get(k).glContentores().get(f).gNumber() + " [" + cco.gTerminals().get(k).glContentores().get(f).gDestination().gName() + "]");
                 
-                System.out.println();
-                System.out.print(cco.gTerminals().get(k).gName() + " contentores unloaded: ");
+            //     //System.out.println();
+            //     //System.out.print(cco.gTerminals().get(k).gName() + " contentores unloaded: ");
 
-                for (int f = 0; f < cco.gTerminals().get(k).guContentores().size(); f++) 
-                    System.out.print(" " + cco.gTerminals().get(k).guContentores().get(f).gNumber() + " ");
+            //     for (int f = 0; f < cco.gTerminals().get(k).guContentores().size(); f++) 
+            //         //System.out.print(" " + cco.gTerminals().get(k).guContentores().get(f).gNumber() + " ");
                 
-                    System.out.println();
+            //         //System.out.println();
 
-            }
+            // }
 
             ccoThread.setDaemon(true);
             ccoThread.start();
@@ -222,16 +291,16 @@ public class programTest extends PApplet {
             for(int f = 0; f < trains.size(); f++)
                 trains.get(f).join();
 
-            for (int k = 0; k < cco.gTerminals().size(); k++) {
-                System.out.print(cco.gTerminals().get(k).gName() + " contentores to load: ");
-                for (int f = 0; f < cco.gTerminals().get(k).glContentores().size(); f++) 
-                    System.out.print(" " + cco.gTerminals().get(k).glContentores().get(f).gNumber() + " [" + cco.gTerminals().get(k).glContentores().get(f).gDestination().gName() + "]");
-                System.out.println();
-                System.out.print(cco.gTerminals().get(k).gName() + " contentores unloaded: ");
-                for (int f = 0; f < cco.gTerminals().get(k).guContentores().size(); f++) 
-                    System.out.print(" " + cco.gTerminals().get(k).guContentores().get(f).gNumber());
-                System.out.println();
-            }
+            // for (int k = 0; k < cco.gTerminals().size(); k++) {
+            //     //System.out.print(cco.gTerminals().get(k).gName() + " contentores to load: ");
+            //     for (int f = 0; f < cco.gTerminals().get(k).glContentores().size(); f++) 
+            //         //System.out.print(" " + cco.gTerminals().get(k).glContentores().get(f).gNumber() + " [" + cco.gTerminals().get(k).glContentores().get(f).gDestination().gName() + "]");
+            //     //System.out.println();
+            //     //System.out.print(cco.gTerminals().get(k).gName() + " contentores unloaded: ");
+            //     for (int f = 0; f < cco.gTerminals().get(k).guContentores().size(); f++) 
+            //         //System.out.print(" " + cco.gTerminals().get(k).guContentores().get(f).gNumber());
+            //     //System.out.println();
+            // }
 
 
         } catch (InterruptedException e) {

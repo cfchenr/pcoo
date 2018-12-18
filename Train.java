@@ -123,7 +123,7 @@ public class Train implements Runnable {
 
         state = "in transit";
 
-        Thread.sleep((long)(1250*source.gPosition().gDistance(destination.gPosition())/velocity));
+        Thread.sleep((long)(3000*(10*source.gPosition().gDistance(destination.gPosition()))/velocity));
         position = destination.gPosition();
 
         cDirection();

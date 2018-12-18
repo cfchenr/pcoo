@@ -78,9 +78,20 @@ public class Terminal {
 
     }
 
-    public boolean ghmContentores (Train train) {
+    public boolean ghmContentores (Train train) throws InterruptedException {
 
         boolean check = false;
+
+        while (guRailway().gTrain() != null) {
+
+            for (int i = 0; i < cco.gTrains().size(); i++)
+                if (cco.gTrains().get(i).gPosition() == position && (cco.gTrains().get(i).gState() == "unloading" || cco.gTrains().get(i).gState() == "waiting for unload"))
+ 
+                    Thread.sleep((long)(1250));
+
+        }
+
+        check = false;
 
         for (int i = 0; i < lContentors.size(); i++)
 

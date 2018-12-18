@@ -37,62 +37,62 @@ public class CCO implements Runnable {
                         sServices(trains.get(i));
                     
 
-                System.out.println("============================================ Terminals ============================================");
+                //System.out.println("============================================ Terminals ============================================");
 
-                for (int k = 0; k < terminals.size(); k++) {
+                // for (int k = 0; k < terminals.size(); k++) {
 
-                    System.out.print(terminals.get(k).gName() + " contentores to load: ");
+                //     //System.out.print(terminals.get(k).gName() + " contentores to load: ");
                     
-                    for (int f = 0; f < terminals.get(k).glContentores().size(); f++) {
+                //     for (int f = 0; f < terminals.get(k).glContentores().size(); f++) {
 
-                        if (terminals.get(k).glContentores().get(f).gTrain() != null)
+                //         if (terminals.get(k).glContentores().get(f).gTrain() != null)
 
-                            System.out.print(" " + terminals.get(k).glContentores().get(f).gNumber() + " [" + terminals.get(k).glContentores().get(f).gDestination().gName() + ", " + terminals.get(k).glContentores().get(f).gTrain().gNumber() + "]");
+                //             //System.out.print(" " + terminals.get(k).glContentores().get(f).gNumber() + " [" + terminals.get(k).glContentores().get(f).gDestination().gName() + ", " + terminals.get(k).glContentores().get(f).gTrain().gNumber() + "]");
     
-                        else 
+                //         else 
     
-                            System.out.print(" " + terminals.get(k).glContentores().get(f).gNumber() + " [" + terminals.get(k).glContentores().get(f).gDestination().gName() + ", " + terminals.get(k).glContentores().get(f).gTrain() + "]");
+                //             //System.out.print(" " + terminals.get(k).glContentores().get(f).gNumber() + " [" + terminals.get(k).glContentores().get(f).gDestination().gName() + ", " + terminals.get(k).glContentores().get(f).gTrain() + "]");
 
-                    }
+                //     }
 
-                    System.out.println();
-                    System.out.print(terminals.get(k).gName() + " contentores unloaded: ");
+                //     //System.out.println();
+                //     //System.out.print(terminals.get(k).gName() + " contentores unloaded: ");
 
-                    for (int f = 0; f < terminals.get(k).guContentores().size(); f++) 
-                        System.out.print(" " + terminals.get(k).guContentores().get(f).gNumber() + " ");
+                //     for (int f = 0; f < terminals.get(k).guContentores().size(); f++) 
+                //         //System.out.print(" " + terminals.get(k).guContentores().get(f).gNumber() + " ");
                     
-                    System.out.println();
+                //     //System.out.println();
 
-                }
+                // }
 
-                System.out.println("============================================   Trains  ============================================");
+                // //System.out.println("============================================   Trains  ============================================");
 
-                for (int k = 0; k < trains.size(); k++) {
+                // for (int k = 0; k < trains.size(); k++) {
 
-                    System.out.print(trains.get(k).gNumber() + " " + trains.get(k).gState());
+                //     //System.out.print(trains.get(k).gNumber() + " " + trains.get(k).gState());
                     
-                    if (trains.get(k).gState() != "stop") {
+                //     if (trains.get(k).gState() != "stop") {
 
-                        System.out.print(": " + trains.get(k).gSource().gName() + " to " + trains.get(k).gDestination().gName());
+                //         //System.out.print(": " + trains.get(k).gSource().gName() + " to " + trains.get(k).gDestination().gName());
 
-                        if (trains.get(k).gContentores().size() > 0) {
+                //         if (trains.get(k).gContentores().size() > 0) {
 
-                            System.out.print(": ");
+                //             //System.out.print(": ");
 
-                            for (int f = 0; f < trains.get(k).gContentores().size(); f++)
-                                System.out.print(" " + trains.get(k).gContentores().get(f).gNumber() + " [" + trains.get(k).gContentores().get(f).gDestination().gName() + "] ");
+                //             for (int f = 0; f < trains.get(k).gContentores().size(); f++)
+                //                 //System.out.print(" " + trains.get(k).gContentores().get(f).gNumber() + " [" + trains.get(k).gContentores().get(f).gDestination().gName() + "] ");
 
-                            System.out.print(" {" + trains.get(k).gContentores().size() + "/" + trains.get(k).gmContentores() + "} ");
+                //             //System.out.print(" {" + trains.get(k).gContentores().size() + "/" + trains.get(k).gmContentores() + "} ");
                             
-                        }
+                //         }
 
-                    }
+                //     }
 
-                    System.out.println();
+                //     //System.out.println();
 
-                }
+                // }
 
-                Thread.sleep(1250);
+                //Thread.sleep(1250);
 
             } while (true);
             
@@ -111,22 +111,22 @@ public class CCO implements Runnable {
 
         int requestThisId = requestId++;
 
-        //System.out.println(requestThisId + ": Train " + train.gNumber() + " asked CCO to load at " + train.gSource().gName() + ".");
+        ////System.out.println(requestThisId + ": Train " + train.gNumber() + " asked CCO to load at " + train.gSource().gName() + ".");
 
         Terminal source = train.gSource();
 
-        //System.out.print("CCO responded to the request " + requestThisId + ": ");
+        ////System.out.print("CCO responded to the request " + requestThisId + ": ");
 
         if (source.glPermition()) {
 
-            //System.out.println("request granted.\nRailway " + source.glRailway().gNumber() + " in " + source.gName() + " was reserved for train " + train.gNumber() + ".");
+            ////System.out.println("request granted.\nRailway " + source.glRailway().gNumber() + " in " + source.gName() + " was reserved for train " + train.gNumber() + ".");
             train.swPermition(false);
             train.slPermition(true);
             source.srlRailway(train);
         
         } else {
         
-            //System.out.println("request rejected.\nCCO gave permission to wait because the railway " + source.glRailway().gNumber() + " in " + source.gName() + " was reserved for the train " + source.glRailway().gReserve().gNumber() + ".");
+            ////System.out.println("request rejected.\nCCO gave permission to wait because the railway " + source.glRailway().gNumber() + " in " + source.gName() + " was reserved for the train " + source.glRailway().gReserve().gNumber() + ".");
             train.slPermition(false);
             train.swPermition(true);
         
@@ -142,22 +142,22 @@ public class CCO implements Runnable {
 
         int requestThisId = requestId++;
 
-        //System.out.println(requestThisId + ": Train " + train.gNumber() + " asked CCO to unload at " + train.gSource().gName() + ".");
+        ////System.out.println(requestThisId + ": Train " + train.gNumber() + " asked CCO to unload at " + train.gSource().gName() + ".");
 
         Terminal source = train.gSource();
 
-        //System.out.print("CCO responded to the request " + requestThisId + ": ");
+        ////System.out.print("CCO responded to the request " + requestThisId + ": ");
 
         if (source.guPermition()) {
 
-            //System.out.println("request granted.\nRailway " + source.guRailway().gNumber() + " in " + source.gName() + " was reserved for train " + train.gNumber() + ".");
+            ////System.out.println("request granted.\nRailway " + source.guRailway().gNumber() + " in " + source.gName() + " was reserved for train " + train.gNumber() + ".");
             train.swPermition(false);
             train.suPermition(true);
             source.sruRailway(train);
         
         } else {
 
-            //System.out.println("request rejected.\nCCO gave permission to wait because the railway " + source.guRailway().gNumber() + " in " + source.gName() + " was reserved for the train " + source.guRailway().gReserve().gNumber() + ".");
+            ////System.out.println("request rejected.\nCCO gave permission to wait because the railway " + source.guRailway().gNumber() + " in " + source.gName() + " was reserved for the train " + source.guRailway().gReserve().gNumber() + ".");
             train.suPermition(false);
             train.swPermition(true);
         
@@ -173,9 +173,9 @@ public class CCO implements Runnable {
 
         //int requestThisId;
 
-        //System.out.println("CCO check if there are contentores for " + train.gNumber() + " to move: " + train.gSource().gName() + " to " + train.gDestination().gName() + " (or ><).");
+        ////System.out.println("CCO check if there are contentores for " + train.gNumber() + " to move: " + train.gSource().gName() + " to " + train.gDestination().gName() + " (or ><).");
 
-        //System.out.print("CCO  concluded that: ");
+        ////System.out.print("CCO  concluded that: ");
         
         // Se tiver contentores onde está para transportar, reserva-os e define o serviço do comboio
         if (train.gSource().ghmContentores(train)) {
@@ -215,7 +215,7 @@ public class CCO implements Runnable {
 
                 if (destination.ghmContentores(train)) {
 
-                    System.out.println("Destino mais próximo do comboio " + train.gNumber() + " que contém contentores para transportar é " + destination.gName());
+                    //System.out.println("Destino mais próximo do comboio " + train.gNumber() + " que contém contentores para transportar é " + destination.gName());
 
                     train.sDestination(destination);
 
@@ -225,7 +225,7 @@ public class CCO implements Runnable {
             
             } else {
 
-                System.out.println("Não há serviços para o comboio " + train.gNumber() + " é " + destination.gName());
+                ////System.out.println("Não há serviços para o comboio " + train.gNumber() + " é " + destination.gName());
 
                 train.nsServices();
 
@@ -235,28 +235,28 @@ public class CCO implements Runnable {
 
         /* if (train.gSource().ghmContentores(train, train.gDestination()) && train.gDestination().ghmContentores(train, train.gSource())) {
 
-            //System.out.println("Yes.");
+            ////System.out.println("Yes.");
             train.sServices(true, true);
 
         }
         
         else if (train.gSource().ghmContentores(train, train.gDestination())) {
 
-            //System.out.println("Yes.");
+            ////System.out.println("Yes.");
             train.sServices(true, false);
 
         }
 
         else if (train.gDestination().ghmContentores(train, train.gSource())) {
         
-            //System.out.println("Yes.");
+            ////System.out.println("Yes.");
             train.sServices(false, true);
         
         }
 
         else {
         
-            //System.out.println("No.");
+            ////System.out.println("No.");
             train.sServices(false, false);
         
         } */
