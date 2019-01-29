@@ -2,7 +2,7 @@ public class Position {
 
     private int x, y;
 
-    public Position (int x) {
+    public Position(int x) {
 
         this.x = x;
 
@@ -10,41 +10,41 @@ public class Position {
 
     }
 
-    public Position (int x, int y) {
+    public Position(int x, int y) {
 
         this.x = x;
         this.y = y;
 
     }
 
-    public void sX (int x) {
+    public void sX(int x) {
 
         this.x = x;
 
     }
-    
-    public int gX () {
+
+    public int gX() {
 
         return x;
 
     }
 
-    public void sY (int y) {
+    public void sY(int y) {
 
         this.y = y;
 
     }
 
-    public int gY () {
+    public int gY() {
 
         return y;
 
     }
 
-    public double gDistance (Position position) {
+    public double gDistance(Position position) {
 
         return Math.sqrt(Math.pow(x - position.x, 2) + Math.pow(y - position.y, 2));
 
     }
-    
+
 }

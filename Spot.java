@@ -3,7 +3,7 @@ import log.*;
 import java.util.*;
 import java.io.*;
 
-public class Railway {
+public class Spot {
 
     private BinarySemaphore semaphoreTransport;
     private int number;
@@ -11,7 +11,7 @@ public class Railway {
     private Transport train;
     private Transport reserve;
 
-    public Railway (int number) {
+    public Spot(int number) {
 
         semaphoreTransport = new BinarySemaphore(1);
         sNumber(number);
@@ -21,55 +21,55 @@ public class Railway {
 
     }
 
-    public void sNumber (int number) {
+    public void sNumber(int number) {
 
         this.number = number;
 
     }
 
-    public int gNumber () {
+    public int gNumber() {
 
         return number;
 
     }
 
-    public void sBusy (boolean busy) {
+    public void sBusy(boolean busy) {
 
         this.busy = busy;
 
     }
 
-    public boolean gBusy () {
+    public boolean gBusy() {
 
         return busy;
 
     }
 
-    public Transport sTransport (Transport transport) {
+    public Transport sTransport(Transport transport) {
 
         return train;
 
     }
 
-    public Transport gTransport () {
+    public Transport gTransport() {
 
         return train;
 
     }
 
-    public void sReserve (Transport train) {
+    public void sReserve(Transport train) {
 
         reserve = train;
 
     }
 
-    public Transport gReserve () {
+    public Transport gReserve() {
 
         return reserve;
 
     }
 
-    public void aTransport (Transport train) {
+    public void aTransport(Transport train) {
 
         semaphoreTransport.acquire();
         busy = true;
@@ -77,7 +77,7 @@ public class Railway {
 
     }
 
-    public void dTransport () {
+    public void dTransport() {
 
         reserve = null;
         train = null;

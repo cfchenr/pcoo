@@ -2,41 +2,42 @@ import java.util.*;
 import pt.ua.concurrent.*;
 
 public class Transport implements Runnable {
-    
+
     private int number;
-    protected int mContentores, velocity;
-    private Terminal source, destination;
-    private Stack<Contentor> contentores;
+    protected int mContainers, velocity;
+    private Infrastructure source, destination;
+    private Stack<Container> containers;
     private CCO cco;
     private boolean sServices, dServices, permitionToLoad, permitionToUnload, permitionToWait;
     private Position position;
     private String state;
 
-    public Transport (int number, Terminal source, Terminal destination, CCO cco) {
-        
+    public Transport(int number, Infrastructure source, Infrastructure destination, CCO cco) {
+
         sState("init");
         sNumber(number);
         sSource(source);
         sPosition(gSource().gPosition());
         sDestination(null);
-        sContentores(new Stack<Contentor>());
+        sContainers(new Stack<Container>());
         nsServices();
         slPermition(false);
         suPermition(false);
         swPermition(false);
         sCCO(cco);
         gCCO().aTransport(this);
-        
+
     }
 
-    public void run () {
+    public void run() {
 
         try {
 
             do {
 
-                // Se o comboio estiver carregado, aguarda permissão para descarregar, descarrega e pára (aguarda por novos serviços)
-                if (contentores.size() > 0) {
+                // Se o comboio estiver carregado, aguarda permissão para descarregar,
+                // descarrega e pára (aguarda por novos serviços)
+                if (containers.size() > 0) {
 
                     do {
 
@@ -54,7 +55,8 @@ public class Transport implements Runnable {
                     dServices = false;
                     state = "stop";
 
-                // Se estiver descarregado e se há serviços onde está, aguarda permissão para carregar, carrega e vai para o seu destino
+                    // Se estiver descarregado e se há serviços onde está, aguarda permissão para
+                    // carregar, carrega e vai para o seu destino
                 } else if (sServices) {
 
                     do {
@@ -65,13 +67,13 @@ public class Transport implements Runnable {
 
                     } while (!permitionToLoad);
 
-                    state = "loading";   
+                    state = "loading";
 
                     source.sLoad(this);
 
-                    goToDestination();             
+                    goToDestination();
 
-                // Se estiver descarregado e se há serviços noutro local, vai para lá
+                    // Se estiver descarregado e se há serviços noutro local, vai para lá
                 } else if (dServices) {
 
                     goToDestination();
@@ -79,15 +81,14 @@ public class Transport implements Runnable {
                     sServices = false;
                     dServices = false;
 
-                // Se estiver descarregado e não há serviços, pára
+                    // Se estiver descarregado e não há serviços, pára
                 } else {
 
                     state = "stop";
 
                 }
-                
-            } while (true);
 
+            } while (true);
 
         } catch (InterruptedException e) {
 
@@ -97,229 +98,229 @@ public class Transport implements Runnable {
 
     }
 
-    public void cDirection () throws InterruptedException {
+    public void cDirection() throws InterruptedException {
 
-        Thread.sleep((long)(1250));
-        Terminal temp = source;
+        Thread.sleep((long) (1250));
+        Infrastructure temp = source;
         source = destination;
         destination = temp;
 
     }
 
-    public void goToDestination () throws InterruptedException {
+    public void goToDestination() throws InterruptedException {
 
         state = "in transit";
 
-        Thread.sleep((long)(3000*(10*source.gPosition().gDistance(destination.gPosition()))/velocity));
+        Thread.sleep((long) (3000 * (10 * source.gPosition().gDistance(destination.gPosition())) / velocity));
         position = destination.gPosition();
 
         cDirection();
 
     }
 
-    public void sNumber (int number) {
+    public void sNumber(int number) {
 
         this.number = number;
 
     }
 
-    public int gNumber () {
+    public int gNumber() {
 
         return number;
 
     }
 
-    public void sSource (Terminal source) {
+    public void sSource(Infrastructure source) {
 
         this.source = source;
 
     }
 
-    public Terminal gSource () {
+    public Infrastructure gSource() {
 
         return source;
-        
+
     }
 
-    public void sDestination (Terminal destination) {
+    public void sDestination(Infrastructure destination) {
 
         this.destination = destination;
 
     }
-    
-    public Terminal gDestination () {
+
+    public Infrastructure gDestination() {
 
         return destination;
 
     }
 
-    public void sPosition (Position position) {
+    public void sPosition(Position position) {
 
         this.position = position;
 
     }
 
-    public Position gPosition () {
+    public Position gPosition() {
 
         return position;
 
     }
-    
-    public void sState (String state) {
+
+    public void sState(String state) {
 
         this.state = state;
 
     }
 
-    public String gState () {
+    public String gState() {
 
         return state;
-        
+
     }
 
-    public void sServices (boolean tf) {
+    public void sServices(boolean tf) {
 
         ssServices(tf);
         sdServices(!tf);
 
     }
 
-    public void nsServices () {
+    public void nsServices() {
 
         ssServices(false);
         sdServices(false);
 
     }
 
-    public boolean gServices () {
+    public boolean gServices() {
 
         return (gsServices() && gdServices());
 
     }
 
-    public void ssServices (boolean tf) {
+    public void ssServices(boolean tf) {
 
         sServices = tf;
 
     }
 
-    public boolean gsServices () {
+    public boolean gsServices() {
 
         return sServices;
 
     }
 
-    public void sdServices (boolean tf) {
+    public void sdServices(boolean tf) {
 
         dServices = tf;
 
     }
 
-    public boolean gdServices () {
+    public boolean gdServices() {
 
         return dServices;
 
     }
 
-    public void slPermition (boolean tf) {
+    public void slPermition(boolean tf) {
 
         permitionToLoad = tf;
 
     }
 
-    public boolean glPermition () {
+    public boolean glPermition() {
 
         return permitionToLoad;
 
     }
 
-    public void suPermition (boolean tf) {
+    public void suPermition(boolean tf) {
 
         permitionToUnload = tf;
 
     }
 
-    public boolean guPermition () {
+    public boolean guPermition() {
 
         return permitionToUnload;
 
     }
 
-    public void swPermition (boolean tf) {
+    public void swPermition(boolean tf) {
 
         permitionToWait = tf;
 
     }
 
-    public boolean gwPermition () {
+    public boolean gwPermition() {
 
         return permitionToWait;
 
     }
 
-    public void sContentores (Stack<Contentor> contentores) {
+    public void sContainers(Stack<Container> containers) {
 
-        this.contentores = contentores;
-
-    }
-
-    public Stack<Contentor> gContentores () {
-
-        return contentores;
+        this.containers = containers;
 
     }
 
-    public void aContentor (Contentor contentor) {
+    public Stack<Container> gContainers() {
 
-        contentores.push(contentor);
-
-    }
-
-    public void smContentores (int mContentores) {
-
-        this.mContentores = mContentores;
+        return containers;
 
     }
 
-    public int gmContentores () {
+    public void aContainer(Container contentor) {
 
-        return mContentores;
+        containers.push(contentor);
 
     }
 
-    public void sVelocity (int velocity) {
+    public void smContainers(int mContainers) {
+
+        this.mContainers = mContainers;
+
+    }
+
+    public int gmContainers() {
+
+        return mContainers;
+
+    }
+
+    public void sVelocity(int velocity) {
 
         this.velocity = velocity;
 
     }
 
-    public int gVelocity () {
+    public int gVelocity() {
 
         return velocity;
 
     }
 
-    public void sCCO (CCO cco) {
+    public void sCCO(CCO cco) {
 
         this.cco = cco;
 
     }
 
-    public CCO gCCO () {
+    public CCO gCCO() {
 
         return cco;
 
     }
 
-    public boolean isFull () {
+    public boolean isFull() {
 
-        return contentores.size() == mContentores;
+        return containers.size() == mContainers;
 
     }
 
-    public boolean isEmpty () {
+    public boolean isEmpty() {
 
-        return contentores.size() == 0;
+        return containers.size() == 0;
 
     }
 

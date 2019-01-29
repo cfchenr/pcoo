@@ -7,20 +7,19 @@ public class CCO implements Runnable {
 
     private BinarySemaphore sMutex;
 
-    private ArrayList<Terminal> terminals;
-    private ArrayList<Transport> trains;
-
-    private int requestId, initialSize;
+    private ArrayList<Infrastructure> infrastructures;
+    private ArrayList<Transport> transports;
 
     public CCO() throws InterruptedException {
 
+        // Semáforo binário para garantir que cada tarefa é atribuida unicamente a um
+        // processo de cada vez.
         sMutex = new BinarySemaphore(1);
 
-        terminals = new ArrayList<Terminal>();
-        trains = new ArrayList<Transport>();
-
-        requestId = 0;
-        initialSize = 0;
+        // Lista de infraestruturas gerenciadas por este cco.
+        infrastructures = new ArrayList<Infrastructure>();
+        // Lista de transportes gerenciados por este cco.
+        transports = new ArrayList<Transport>();
 
     }
 
@@ -28,13 +27,15 @@ public class CCO implements Runnable {
 
         try {
 
+            // Percorre todos os transportes existentes no cco e caso exista algum
+            // transportes
+            // parado verifica se existem algum serviço para ele realizar.
             do
+                for (int i = 0; i < transports.size(); i++)
 
-                for (int i = 0; i < trains.size(); i++)
+                    if (transports.get(i).gState() == "stop")
 
-                    if (trains.get(i).gState() == "stop")
-
-                        sServices(trains.get(i));
+                        sServices(transports.get(i));
 
             while (true);
 
@@ -46,24 +47,29 @@ public class CCO implements Runnable {
 
     }
 
-    public void slPermition(Transport train) throws InterruptedException {
+    // Determina se o @transport tem permição para carregar na sua origem.
+    public void slPermition(Transport transport) throws InterruptedException {
 
         sMutex.acquire();
 
-        int requestThisId = requestId++;
-
-        Terminal source = train.gSource();
+        Infrastructure source = transport.gSource();
 
         if (source.glPermition()) {
 
-            train.swPermition(false);
-            train.slPermition(true);
-            source.srlRailway(train);
+            // Caso tenha permição, o estado de permição para esperar é "false" e o estado
+            // de permição de carregamento é "true".
+            transport.swPermition(false);
+            transport.slPermition(true);
+
+            // O transportes carrega na sua origem.
+            source.srlSpot(transport);
 
         } else {
 
-            train.slPermition(false);
-            train.swPermition(true);
+            // Caso não tenha permição, o estado de permição de carregamento é "false" e o
+            // estado de permição para esperar é "true".
+            transport.slPermition(false);
+            transport.swPermition(true);
 
         }
 
@@ -71,24 +77,31 @@ public class CCO implements Runnable {
 
     }
 
-    public void suPermition(Transport train) throws InterruptedException {
+    // Determina se o @transport tem permição para descarregar no seu destino
+    // (como o transporte nesta fase já chegou ao destino, este passa a ser a sua
+    // origem).
+    public void suPermition(Transport transport) throws InterruptedException {
 
         sMutex.acquire();
 
-        int requestThisId = requestId++;
-
-        Terminal source = train.gSource();
+        Infrastructure source = transport.gSource();
 
         if (source.guPermition()) {
 
-            train.swPermition(false);
-            train.suPermition(true);
-            source.sruRailway(train);
+            // Caso tenha permição, o estado de permição para esperar é "false" e o estado
+            // de permição de descarregamento é "true".
+            transport.swPermition(false);
+            transport.suPermition(true);
+
+            // O transportes descarrega no seu destino.
+            source.sruSpot(transport);
 
         } else {
 
-            train.suPermition(false);
-            train.swPermition(true);
+            // Caso não tenha permição, o estado de permição de descarregamento é "false" e
+            // o estado de permição para esperar é "true".
+            transport.suPermition(false);
+            transport.swPermition(true);
 
         }
 
@@ -96,51 +109,72 @@ public class CCO implements Runnable {
 
     }
 
-    public void sServices(Transport train) throws InterruptedException {
+    // Define o serviço para o @transport.
+    public void sServices(Transport transport) throws InterruptedException {
 
         sMutex.acquire();
 
-        if (train.gSource().ghmContentores(train))
+        // Se existirem contentores para serem movidos a partir da origem do
+        // transportes,
+        // então define os serviços do transportes como "true".
+        if (transport.gSource().ghmContainers(transport))
 
-            train.sServices(true);
+            transport.sServices(true);
 
+        // Caso não existam contentores para serem movidos a partir da origem do
+        // transportes, procura a infraestrutura mais próxima deste, que contenham
+        // contentores
+        // para mover.
         else {
 
             double minDistance;
-            Terminal destination = train.gSource();
+            Infrastructure destination = transport.gSource();
 
-            if (train.gSource() != terminals.get(0))
+            if (transport.gSource() != infrastructures.get(0))
 
-                minDistance = train.gSource().gPosition().gDistance(terminals.get(0).gPosition());
+                minDistance = transport.gSource().gPosition().gDistance(infrastructures.get(0).gPosition());
 
             else
 
-                minDistance = train.gSource().gPosition().gDistance(terminals.get(1).gPosition());
+                minDistance = transport.gSource().gPosition().gDistance(infrastructures.get(1).gPosition());
 
-            for (int i = 0; i < terminals.size(); i++) {
+            // Percorre todas as infraestruturas para verifiar qual é a infraestrutura mais
+            // próxima que
+            // contém contentores para carregar.
+            for (int i = 0; i < infrastructures.size(); i++) {
 
-                if (train.gSource() != terminals.get(i) && terminals.get(i).glContentores().size() > 0
-                        && train.gSource().gPosition().gDistance(terminals.get(i).gPosition()) < minDistance)
+                if (transport.gSource() != infrastructures.get(i) && infrastructures.get(i).glContainers().size() > 0
+                        && transport.gSource().gPosition()
+                                .gDistance(infrastructures.get(i).gPosition()) < minDistance) {
 
-                    minDistance = train.gSource().gPosition().gDistance(terminals.get(i).gPosition());
+                    minDistance = transport.gSource().gPosition().gDistance(infrastructures.get(i).gPosition());
 
-                destination = terminals.get(i);
-
-            }
-
-            if (destination != train.gSource()) {
-
-                if (destination.ghmContentores(train)) {
-
-                    train.sDestination(destination);
-
-                    train.sServices(false);
+                    destination = infrastructures.get(i);
 
                 }
 
+            }
+
+            // Verifica se a infraestrutura encontrada é diferente da infraestrutura onde o
+            // transportes se
+            // encontra.
+            if (destination != transport.gSource()) {
+
+                // Verifica se a infraestrutura encontrada contém contentores para mover.
+                if (destination.ghmContainers(transport)) {
+
+                    // Define o destino do transportes para a infraestrutura encontrada.
+                    transport.sDestination(destination);
+
+                    // Define que o transportes tem serviços para realizar no seu destino.
+                    transport.sServices(false);
+
+                }
+
+                // Caso contrário, define que o transportes não tem serviços para realizar.
             } else {
 
-                train.nsServices();
+                transport.nsServices();
 
             }
 
@@ -150,40 +184,45 @@ public class CCO implements Runnable {
 
     }
 
-    public ArrayList<Terminal> gTerminals() {
+    // Retorna a lista de infraestruturas gerenciadas por este cco.
+    public ArrayList<Infrastructure> gInfrastructures() {
 
-        return terminals;
-
-    }
-
-    public void aTerminal(Terminal terminal) {
-
-        terminals.add(terminal);
+        return infrastructures;
 
     }
 
-    public void rTerminal(Terminal terminal) {
+    // Adiciona a @infrastructure para ser gerenciado por este cco.
+    public void aInfrastructure(Infrastructure infrastructure) {
 
-        terminals.remove(terminal);
+        infrastructures.add(infrastructure);
 
     }
 
+    // Remove a @infrastructure, deixando este de ser gerenciado por este cco.
+    public void rInfrastructure(Infrastructure infrastructure) {
+
+        infrastructures.remove(infrastructure);
+
+    }
+
+    // Retorna a lista de transportes gerenciados por este cco.
     public ArrayList<Transport> gTransports() {
 
-        return trains;
+        return transports;
 
     }
 
-    public void aTransport(Transport train) {
+    // Adiciona o @transport para ser gerenciado por este cco.
+    public void aTransport(Transport transport) {
 
-        trains.add(train);
-        initialSize = trains.size();
+        transports.add(transport);
 
     }
 
-    public void rTransport(Transport train) {
+    // Remove o @transport, deixando este de ser gerenciado por este cco.
+    public void rTransport(Transport transport) {
 
-        trains.remove(train);
+        transports.remove(transport);
 
     }
 

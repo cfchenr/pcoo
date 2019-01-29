@@ -1,6 +1,6 @@
-public class Train extends Transport implements Runnable {
+public class Ship extends Transport implements Runnable {
 
-    public Train(int number, Terminal source, Terminal destination, CCO cco) throws InterruptedException {
+    public Ship(int number, Dock source, Dock destination, CCO cco) throws InterruptedException {
 
         super(number, source, destination, cco);
 
