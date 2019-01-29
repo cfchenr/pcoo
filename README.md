@@ -4,7 +4,6 @@ Simulação da gestão de transporte de contentores, através de comboios e navi
 
 ![vscode_pcoo](https://i.gyazo.com/fc3cc5c77423bcdf025b1226609f2198.png)
 
-
 ## Simulação
 
 Este software simula uma proposta para gerir contentores disponíveis em diversos terminas e docas, recorrendo a máquinas ferroviárias e/ou navios.
@@ -12,6 +11,14 @@ Este software simula uma proposta para gerir contentores disponíveis em diverso
 Existe uma entidade (**World**) que gera centros de controlo e operações (**CCO**), diversos terminais (**Terminal**) e docas (**Dock**), comboios (**Train**) e navios (**Ship**) e ainda contentores (**Container**) com distintos destinos.
 
 O *núcleo* desta gestão é realizada essencialmente através dos centros de controlo e operações cujo as suas principais tarefas são atribuir permissões para um determinado transporte poder carregar e descarregar nas suas  origens e destinos (respetivamente).
+
+Os centros de controlo e operações (i.e. CCO) contêm uma lista com infraestruturas que são geridas por eles e ainda uma lista de transportes também geridos por eles.
+Nesta estrutura está implementada a lógica de exclusão mútua, por forma a garantir que não existem duas operações sobre o mesmo objeto, evitando assim que existam erros no decorrer da simulação.
+
+As infraestruturas contém locais de carga e descarga, uma lista de contentores para serem carregados e uma lista de contentores descarregados, um CCO que a gere e um estado.
+
+Os transportes contém um limite de carga máximo e uma velocidade (não necessáriamente iguais para os diversos transportes).
+Cada um destes objetos contém indicadores sobre as permições atribuidas a eles (carregar, descarregar ou esperar), um estado, uma infraestrutura de origem e uma de destino, uma lista de contentores a ou para transportar e a sua posição.
 
 ## Fluxo da simulação (Ideia implementada)
 
@@ -22,6 +29,94 @@ O *núcleo* desta gestão é realizada essencialmente através dos centros de co
 5.
 6.
 ...
+
+## Notações a considerar
+
+- s: set
+- g: get
+- a: add
+- r: remove
+- l: load
+- u: unload
+
+## Lista de objetos e métodos disponíveis
+
+1. CCO
+    - slPermition(Transport transport)
+    - suPermition(Transport transport)
+    - sService(Transport transport)
+    - gInfrastructures()
+    - aInfrastructure(Infrastructure infrastructure)
+    - rInfrastructure(Infrastructure infrastructure)
+    - aTransports(Transport transport)
+    - rTransports(Transport transport)
+    - gTransports()
+
+2. Container
+    - sNumber(int number)
+    - gNumber()
+    - sDestination(Infrastructure infrastructure)
+    - gDestination()
+    - sTransport(Transport transport)
+    - gTransport
+    
+3. Dock (estende Infrastructure)
+
+4. Infrastructure
+    - sName(String name)
+    - gName()
+    - slSpot(Spot spot)
+    - glSpot()
+    - suSpot(Spot spot)
+    - guSpot()
+    - slContainers(ArrayList<Container> lContainers)
+    - glContainers()
+    - suContainers(ArrayList<Container> uContainers)
+    - guContainers()
+    - sPosition(Position position)
+    - gPosition
+    - sClose(boolean tf)
+    - gClose()
+    - ghmContainers(Transport transport)
+    - glPermition()
+    - guPermition()
+    - srlSpot(Transport transport)
+    - grlSpot()
+    - sruSpot(Transport transport)
+    - gruSpot()
+    - suContainers(Transport transport)
+    - sLoad(Transport transport)
+    - sUnload(Transport transport) 
+    - alContainers(ArrayList<Container> containers)
+    - sCCO(CCO cco)
+    - gCCO()
+    - finish()
+  
+5. Position
+    - sX(int x)
+    - gX()
+    - sY(int y)
+    - gY()
+    - gDistance(Position position)
+    
+6. Ship (estende Transport)
+
+7. Spot
+    - sNumber(int number)
+    - gNumber
+    - sBusy(boolean busy)
+    - gBusy()
+    - sTransport(Transport transport)
+    - gTransport()
+    - sReserve(Transport transport)
+    - gReserve()
+    - aTransport(Transport transport)
+    - rTransport()
+    
+8. Terminal
+9. Train
+10. Transport
+11. World
 
 ## Entidades ativas
 
