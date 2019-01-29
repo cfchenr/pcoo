@@ -32,12 +32,29 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 
 ## Notações a considerar
 
-- s: set
-- g: get
 - a: add
-- r: remove
+- c: change
+- g: get
+    - gd: get destination
+    - gl: get load
+    - gm: get max
+    - gs: get source
+    - gu: get unload
+    - gw: get wait
+- gt: go to
 - l: load
+- m: max
+- ns: no set
+- r: remove
+- s: set
+    - sd: set destination
+    - sl: set load
+    - sm: set max
+    - ss: set source
+    - su: set unload
+    - sw: set wait
 - u: unload
+- w: wait
 
 ## Lista de objetos e métodos disponíveis
 
@@ -113,9 +130,46 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
     - aTransport(Transport transport)
     - rTransport()
     
-8. Terminal
-9. Train
+8. Terminal (estende Infrastructure)
+9. Train (estende Transport)
 10. Transport
+    - cDirection()
+    - gtDestination()
+    - sNumber(int number)
+    - gNumber()
+    - sSource(Infrastructure source)
+    - gSource()
+    - sDestination(Infrastructure destination)
+    - gDestination
+    - sPosition(Position  position)
+    - gPosition
+    - sState(String state)
+    - gState()
+    - sServices(boolean tf)
+    - nsServices()
+    - gServices()
+    - ssServices(boolean tf)
+    - gsServices()
+    - sdServices(boolean tf)
+    - gdServices()
+    - slPermition(boolean tf)
+    - glPermition()
+    - suPermition(boolean tf)
+    - guPermition()
+    - swPermition(boolean tf)
+    - gwPermition()
+    - sContainers(Stack<Container> containers)
+    - gContainers()
+    - aContainer(Container contentor)
+    - smContainers(int mContainers)
+    - gmContainers()
+    - sVelocity(int velocity)
+    - gVelocity()
+    - sCCO(CCO cco)
+    - gCCO()
+    - isFull()
+    - isEmpty()
+    
 11. World
 
 ## Entidades ativas
