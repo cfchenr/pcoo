@@ -39,9 +39,9 @@ public class programTest extends PApplet {
         rect(width/34, height/14, (7*width)/34 - 5, (12*height)/14 - 5);
 
         int line = 1;
-        for (int i = 0; i < cco.gTrains().size(); i++)
-            if (cco.gTrains().get(i).gState() == "in transit")
-                text(cco.gTrains().get(i).gSource().gName() + " " + cco.gTrains().get(i).gNumber() + " " + cco.gTrains().get(i).gDestination().gName(), width/34 + 5, height/14 + (height/38)*line++);
+        for (int i = 0; i < cco.gTransports().size(); i++)
+            if (cco.gTransports().get(i).gState() == "in transit")
+                text( cco.gTransports().get(i).gNumber() +": " + cco.gTransports().get(i).gSource().gName() + " -> " + cco.gTransports().get(i).gDestination().gName(), width/34 + 5, height/14 + (height/38)*line++);
 
         text("Terminais", 8*width/34 + 5, height/14 - 5);
 
@@ -57,19 +57,19 @@ public class programTest extends PApplet {
             terminalButton.get(i).draw();
             
             text("Máquinas a carregar", 8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 2*(height/38));          
-            if (cco.gTerminals().get(i).glRailway().gTrain() != null)
-                text(cco.gTerminals().get(i).glRailway().gTrain().gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 3*(height/38));
+            if (cco.gTerminals().get(i).glRailway().gTransport() != null)
+                text(cco.gTerminals().get(i).glRailway().gTransport().gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 3*(height/38));
 
             text("Máquinas a descarregar", 8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 4*(height/38));
-            if (cco.gTerminals().get(i).guRailway().gTrain() != null)
-                text(cco.gTerminals().get(i).guRailway().gTrain().gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 5*(height/38));
+            if (cco.gTerminals().get(i).guRailway().gTransport() != null)
+                text(cco.gTerminals().get(i).guRailway().gTransport().gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 5*(height/38));
 
             int columnTerminal = 0;
             int lineTerminal = 1;
             text("Máquinas estacionadas ou em espera", 8*width/34 + (i%3)*(8*width/34) + 5, height/14 + line*(3*height/14) + 6*(height/38));
-            for (int j = 0; j < cco.gTrains().size(); j++)
-                if (cco.gTrains().get(j).gState() != "in transit" && cco.gTrains().get(j).gPosition() == cco.gTerminals().get(i).gPosition() && cco.gTerminals().get(i).glRailway().gTrain() != cco.gTrains().get(j) && cco.gTerminals().get(i).guRailway().gTrain() != cco.gTrains().get(j))
-                    text(cco.gTrains().get(j).gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5 + columnTerminal++*(width/34), height/14 + line*(3*height/14) + 7*(height/38));
+            for (int j = 0; j < cco.gTransports().size(); j++)
+                if (cco.gTransports().get(j).gState() != "in transit" && cco.gTransports().get(j).gPosition() == cco.gTerminals().get(i).gPosition() && cco.gTerminals().get(i).glRailway().gTransport() != cco.gTransports().get(j) && cco.gTerminals().get(i).guRailway().gTransport() != cco.gTransports().get(j))
+                    text(cco.gTransports().get(j).gNumber(),  8*width/34 + (i%3)*(8*width/34) + 5 + columnTerminal++*(width/34), height/14 + line*(3*height/14) + 7*(height/38));
 
                 if (columnTerminal % 6 == 0 && columnTerminal != 0) {
                     columnTerminal = 0;
@@ -103,7 +103,7 @@ public class programTest extends PApplet {
                     if (j > 0 && j%20 == 0)
                         column++;
 
-                    text(temp.glContentores().get(j).gNumber(), column*(width/34 + 5), height/14 + (height/38)*line++);
+                    text(temp.glContentores().get(j).gNumber() + ": " + temp.glContentores().get(j).gDestination().gName(), column*(width/34 + 5), height/14 + (height/38)*line++);
 
                 }
 

@@ -17,27 +17,27 @@ public class Position {
 
     }
 
+    public void sX (int x) {
+
+        this.x = x;
+
+    }
+    
     public int gX () {
 
         return x;
 
     }
 
-    public int gY () {
-
-        return y;
-
-    }
-
-    public void sX (int x) {
-
-        this.x = x;
-
-    }
-
     public void sY (int y) {
 
         this.y = y;
+
+    }
+
+    public int gY () {
+
+        return y;
 
     }
 

@@ -15,12 +15,12 @@ public class Terminal {
     private boolean close;
     private Position position;
 
-    public Terminal (String name, int x, CCO cco) {
+    public Terminal(String name, int x, CCO cco) {
 
         this.name = name;
-        
-        lRailway = new Railway (1);
-        uRailway = new Railway (2);
+
+        lRailway = new Railway(1);
+        uRailway = new Railway(2);
 
         lContentors = new ArrayList<Contentor>();
         uContentors = new ArrayList<Contentor>();
@@ -36,58 +36,60 @@ public class Terminal {
 
     }
 
-    public String gName () {
+    public String gName() {
 
         return name;
 
     }
 
-    public Railway glRailway () {
+    public Railway glRailway() {
 
         return lRailway;
 
     }
 
-    public Railway guRailway () {
+    public Railway guRailway() {
 
         return uRailway;
 
     }
 
-    public ArrayList<Contentor> glContentores () {
+    public ArrayList<Contentor> glContentores() {
 
         return lContentors;
 
     }
 
-    public ArrayList<Contentor> guContentores () {
+    public ArrayList<Contentor> guContentores() {
 
         return uContentors;
 
     }
 
-    public Position gPosition () {
+    public Position gPosition() {
 
         return position;
 
     }
 
-    public boolean gClose () throws InterruptedException {
+    public boolean gClose() throws InterruptedException {
 
         return close;
 
     }
 
-    public boolean ghmContentores (Train train) throws InterruptedException {
+    public boolean ghmContentores(Transport train) throws InterruptedException {
 
         boolean check = false;
 
-        while (guRailway().gTrain() != null) {
+        while (guRailway().gTransport() != null) {
 
-            for (int i = 0; i < cco.gTrains().size(); i++)
-                if (cco.gTrains().get(i).gPosition() == position && (cco.gTrains().get(i).gState() == "unloading" || cco.gTrains().get(i).gState() == "waiting for unload"))
- 
-                    Thread.sleep((long)(1250));
+            for (int i = 0; i < cco.gTransports().size(); i++)
+                if (cco.gTransports().get(i).gPosition() == position
+                        && (cco.gTransports().get(i).gState() == "unloading"
+                                || cco.gTransports().get(i).gState() == "waiting for unload"))
+
+                    Thread.sleep((long) (1250));
 
         }
 
@@ -95,7 +97,7 @@ public class Terminal {
 
         for (int i = 0; i < lContentors.size(); i++)
 
-            if (lContentors.get(i).gTrain() == null || lContentors.get(i).gTrain() == train) {
+            if (lContentors.get(i).gTransport() == null || lContentors.get(i).gTransport() == train) {
 
                 check = true;
                 train.sDestination(lContentors.get(i).gDestination());
@@ -116,9 +118,10 @@ public class Terminal {
 
                 for (int i = 0; i < lContentors.size(); i++) {
 
-                    if (lContentors.get(i).gTrain() == null && lContentors.get(i).gDestination() == select.peek() && size < train.gmContentores()) {
+                    if (lContentors.get(i).gTransport() == null && lContentors.get(i).gDestination() == select.peek()
+                            && size < train.gmContentores()) {
 
-                        lContentors.get(i).sTrain(train);
+                        lContentors.get(i).sTransport(train);
                         size++;
 
                     }
@@ -130,20 +133,21 @@ public class Terminal {
 
                 if (size == train.gmContentores())
                     break;
-   
+
                 Terminal selectT = this;
                 double minDistance = position.gDistance(train.gDestination().gPosition());
                 close = true;
 
                 for (int i = 0; i < cco.gTerminals().size(); i++)
 
-                    if (!select.contains(cco.gTerminals().get(i)) && position.gDistance(cco.gTerminals().get(i).gPosition()) > train.gDestination().gPosition().gDistance(cco.gTerminals().get(i).gPosition())) {
-                        
+                    if (!select.contains(cco.gTerminals().get(i))
+                            && position.gDistance(cco.gTerminals().get(i).gPosition()) > train.gDestination()
+                                    .gPosition().gDistance(cco.gTerminals().get(i).gPosition())) {
+
                         selectT = cco.gTerminals().get(i);
                         close = false;
 
                     }
-
 
                 select.add(selectT);
 
@@ -155,41 +159,41 @@ public class Terminal {
 
     }
 
-    public boolean glPermition () {
+    public boolean glPermition() {
 
         return (lRailway.gReserve() == null);
 
     }
 
-    public boolean guPermition () {
+    public boolean guPermition() {
 
         return (uRailway.gReserve() == null);
 
     }
 
-    public void srlRailway (Train train) {
+    public void srlRailway(Transport train) {
 
         lRailway.sReserve(train);
 
     }
 
-    public void sruRailway (Train train) {
+    public void sruRailway(Transport train) {
 
         uRailway.sReserve(train);
 
     }
 
-    private void suContentores (Train train) throws InterruptedException {
+    private void suContentores(Transport train) throws InterruptedException {
 
         for (int i = 0; i < train.gContentores().size(); i++)
-            train.gContentores().get(i).sTrain(null);
+            train.gContentores().get(i).sTransport(null);
 
     }
 
-    public void sLoad (Train train) throws InterruptedException {
+    public void sLoad(Transport train) throws InterruptedException {
 
         slMutex.acquire();
-        lRailway.aTrain(train);
+        lRailway.aTransport(train);
 
         Stack<Terminal> select = new Stack<Terminal>();
         select.add(train.gSource());
@@ -202,12 +206,13 @@ public class Terminal {
 
             for (int i = 0; i < lContentors.size(); i++) {
 
-                if ((lContentors.get(i).gTrain() == null || lContentors.get(i).gTrain() == train) && lContentors.get(i).gDestination() == select.peek() && size < train.gmContentores()) {
+                if ((lContentors.get(i).gTransport() == null || lContentors.get(i).gTransport() == train)
+                        && lContentors.get(i).gDestination() == select.peek() && size < train.gmContentores()) {
 
                     train.aContentor(lContentors.get(i));
                     lContentors.remove(i);
                     i--;
-                    Thread.sleep((long)(1250));
+                    Thread.sleep((long) (1250));
                     size++;
 
                 }
@@ -219,34 +224,36 @@ public class Terminal {
 
             if (size == train.gmContentores())
                 break;
-               
+
             Terminal selectT = this;
             double minDistance = position.gDistance(train.gDestination().gPosition());
             close = true;
 
             for (int i = 0; i < cco.gTerminals().size(); i++)
 
-                if (!select.contains(cco.gTerminals().get(i)) && position.gDistance(cco.gTerminals().get(i).gPosition()) > train.gDestination().gPosition().gDistance(cco.gTerminals().get(i).gPosition())) {
-                
+                if (!select.contains(cco.gTerminals().get(i))
+                        && position.gDistance(cco.gTerminals().get(i).gPosition()) > train.gDestination().gPosition()
+                                .gDistance(cco.gTerminals().get(i).gPosition())) {
+
                     selectT = cco.gTerminals().get(i);
                     close = false;
 
                 }
 
             select.add(selectT);
-        
+
         }
 
-        lRailway.dTrain();
+        lRailway.dTransport();
         slMutex.release();
 
     }
 
-    public void sUnload (Train train) throws InterruptedException {
+    public void sUnload(Transport train) throws InterruptedException {
 
         suMutex.acquire();
         suContentores(train);
-        uRailway.aTrain(train);
+        uRailway.aTransport(train);
 
         while (!train.isEmpty()) {
 
@@ -256,29 +263,29 @@ public class Terminal {
             else
                 lContentors.add(train.gContentores().pop());
 
-            Thread.sleep((long)(1250));
+            Thread.sleep((long) (1250));
 
         }
 
-        uRailway.dTrain();
+        uRailway.dTransport();
         suMutex.release();
 
     }
 
-    public void sClose (boolean tf) throws InterruptedException {
+    public void sClose(boolean tf) throws InterruptedException {
 
         close = tf;
 
     }
 
-    public void addlContentores (ArrayList<Contentor> contentores) {
+    public void addlContentores(ArrayList<Contentor> contentores) {
 
         for (int i = 0; i < contentores.size(); i++)
             lContentors.add(contentores.get(i));
 
     }
 
-    public void finish () {
+    public void finish() {
 
         log.close();
 

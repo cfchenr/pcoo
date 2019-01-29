@@ -5,19 +5,25 @@ import java.io.*;
 
 public class Railway {
 
-    private BinarySemaphore semaphoreTrain;
+    private BinarySemaphore semaphoreTransport;
     private int number;
     private boolean busy;
-    private Train train;
-    private Train reserve;
+    private Transport train;
+    private Transport reserve;
 
     public Railway (int number) {
 
-        semaphoreTrain = new BinarySemaphore(1);
+        semaphoreTransport = new BinarySemaphore(1);
+        sNumber(number);
+        sBusy(false);
+        sTransport(null);
+        sReserve(null);
+
+    }
+
+    public void sNumber (int number) {
+
         this.number = number;
-        busy = false;
-        train = null;
-        reserve = null;
 
     }
 
@@ -27,44 +33,56 @@ public class Railway {
 
     }
 
-    public boolean isBusy () {
+    public void sBusy (boolean busy) {
+
+        this.busy = busy;
+
+    }
+
+    public boolean gBusy () {
 
         return busy;
 
     }
 
-    public Train gTrain () {
+    public Transport sTransport (Transport transport) {
 
         return train;
 
     }
 
-    public void sReserve (Train train) {
+    public Transport gTransport () {
+
+        return train;
+
+    }
+
+    public void sReserve (Transport train) {
 
         reserve = train;
 
     }
 
-    public Train gReserve () {
+    public Transport gReserve () {
 
         return reserve;
 
     }
 
-    public void aTrain (Train train) {
+    public void aTransport (Transport train) {
 
-        semaphoreTrain.acquire();
+        semaphoreTransport.acquire();
         busy = true;
         this.train = train;
 
     }
 
-    public void dTrain () {
+    public void dTransport () {
 
         reserve = null;
         train = null;
         busy = false;
-        semaphoreTrain.release();
+        semaphoreTransport.release();
 
     }
 

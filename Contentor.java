@@ -5,13 +5,19 @@ public class Contentor {
 
     private int number;
     private Terminal destination;
-    private Train train;
+    private Transport transport;
 
     public Contentor (int number, Terminal destination) {
 
+        sNumber(number);
+        sDestination(destination);
+        sTransport(null);
+
+    }
+
+    public void sNumber (int number) {
+
         this.number = number;
-        this.destination = destination;
-        train = null;
 
     }
 
@@ -21,21 +27,27 @@ public class Contentor {
 
     }
 
+    public void sDestination (Terminal destination) {
+
+        this.destination = destination;
+
+    }
+
     public Terminal gDestination () {
 
         return destination;
 
     }
 
-    public Train gTrain () {
+    public void sTransport (Transport transport) {
 
-        return train;
+        this.transport = transport;
 
     }
 
-    public void sTrain (Train train) {
+    public Transport gTransport () {
 
-        this.train = train;
+        return transport;
 
     }
 
