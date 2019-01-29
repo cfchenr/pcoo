@@ -56,7 +56,7 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 - u: unload
 - w: wait
 
-## Lista de objetos e métodos disponíveis
+## Lista de objetos, construtores e métodos disponíveis
 
 1. CCO
     <details><summary>Construtores</summary>
