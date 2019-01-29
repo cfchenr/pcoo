@@ -1,1 +1,7 @@
 *.class
+log/
+img/
+.idea/
+.vscode/
+processing/
+pt/
