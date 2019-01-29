@@ -235,16 +235,16 @@ public class programTest extends PApplet {
             destinations[8] = tSetubal;
             destinations[9] = tFaro;
 
-            tGuimaraes.addlContainers(createContainers(tGuimaraes, 10, destinations));
-            tBraga.addlContainers(createContainers(tBraga, 10, destinations));
-            tPorto.addlContainers(createContainers(tPorto, 10, destinations));
-            tPampilhosa.addlContainers(createContainers(tPampilhosa, 10, destinations));
-            tCoimbra.addlContainers(createContainers(tCoimbra, 10, destinations));
-            tEntroncamento.addlContainers(createContainers(tEntroncamento, 10, destinations));
-            tSantarem.addlContainers(createContainers(tSantarem, 10, destinations));
-            tLisboa.addlContainers(createContainers(tLisboa, 10, destinations));
-            tSetubal.addlContainers(createContainers(tSetubal, 10, destinations));
-            tFaro.addlContainers(createContainers(tFaro, 10, destinations));
+            tGuimaraes.alContainers(createContainers(tGuimaraes, 10, destinations));
+            tBraga.alContainers(createContainers(tBraga, 10, destinations));
+            tPorto.alContainers(createContainers(tPorto, 10, destinations));
+            tPampilhosa.alContainers(createContainers(tPampilhosa, 10, destinations));
+            tCoimbra.alContainers(createContainers(tCoimbra, 10, destinations));
+            tEntroncamento.alContainers(createContainers(tEntroncamento, 10, destinations));
+            tSantarem.alContainers(createContainers(tSantarem, 10, destinations));
+            tLisboa.alContainers(createContainers(tLisboa, 10, destinations));
+            tSetubal.alContainers(createContainers(tSetubal, 10, destinations));
+            tFaro.alContainers(createContainers(tFaro, 10, destinations));
 
             ArrayList<Thread> trains = new ArrayList<Thread>();
             trains.add(new Thread(new Train(501, tGuimaraes, tBraga, cco), "501"));

@@ -71,12 +71,12 @@ public class Transport implements Runnable {
 
                     source.sLoad(this);
 
-                    goToDestination();
+                    gtDestination();
 
                     // Se estiver descarregado e se há serviços noutro local, vai para lá
                 } else if (dServices) {
 
-                    goToDestination();
+                    gtDestination();
 
                     sServices = false;
                     dServices = false;
@@ -107,7 +107,7 @@ public class Transport implements Runnable {
 
     }
 
-    public void goToDestination() throws InterruptedException {
+    public void gtDestination() throws InterruptedException {
 
         state = "in transit";
 

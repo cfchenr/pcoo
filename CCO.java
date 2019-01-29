@@ -205,13 +205,6 @@ public class CCO implements Runnable {
 
     }
 
-    // Retorna a lista de transportes gerenciados por este cco.
-    public ArrayList<Transport> gTransports() {
-
-        return transports;
-
-    }
-
     // Adiciona o @transport para ser gerenciado por este cco.
     public void aTransport(Transport transport) {
 
@@ -226,4 +219,11 @@ public class CCO implements Runnable {
 
     }
 
+    // Retorna a lista de transportes gerenciados por este cco.
+    public ArrayList<Transport> gTransports() {
+
+        return transports;
+
+    }
+    
 }

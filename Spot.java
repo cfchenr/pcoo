@@ -8,7 +8,7 @@ public class Spot {
     private BinarySemaphore semaphoreTransport;
     private int number;
     private boolean busy;
-    private Transport train;
+    private Transport transport;
     private Transport reserve;
 
     public Spot(int number) {
@@ -45,21 +45,21 @@ public class Spot {
 
     }
 
-    public Transport sTransport(Transport transport) {
+    public void sTransport(Transport transport) {
 
-        return train;
+        this.transport = transport;
 
     }
 
     public Transport gTransport() {
 
-        return train;
+        return transport;
 
     }
 
-    public void sReserve(Transport train) {
+    public void sReserve(Transport transport) {
 
-        reserve = train;
+        reserve = transport;
 
     }
 
@@ -69,18 +69,18 @@ public class Spot {
 
     }
 
-    public void aTransport(Transport train) {
+    public void aTransport(Transport transport) {
 
         semaphoreTransport.acquire();
         busy = true;
-        this.train = train;
+        this.transport = transport;
 
     }
 
-    public void dTransport() {
+    public void rTransport() {
 
         reserve = null;
-        train = null;
+        transport = null;
         busy = false;
         semaphoreTransport.release();
 

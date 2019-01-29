@@ -18,21 +18,16 @@ public class Infrastructure {
     public Infrastructure(String name, int x, CCO cco) {
 
         sName(name);
-
         slSpot(new Spot(1));
         suSpot(new Spot(2));
-
         slContainers(new ArrayList<Container>());
         suContainers(new ArrayList<Container>());
-
         slMutex = new BinarySemaphore(1);
         suMutex = new BinarySemaphore(1);
-
         sPosition(new Position(x));
-
         close = false;
-
-        this.cco = cco;
+        sCCO(cco);
+        gCCO().aInfrastructure(this);
 
     }
 
@@ -321,7 +316,7 @@ public class Infrastructure {
 
         }
 
-        lSpot.dTransport();
+        lSpot.rTransport();
         slMutex.release();
 
     }
@@ -345,16 +340,30 @@ public class Infrastructure {
 
         }
 
-        uSpot.dTransport();
+        uSpot.rTransport();
         suMutex.release();
 
     }
 
     // Adiciona containers para carregar, a esta infraestrutura.
-    public void addlContainers(ArrayList<Container> containers) {
+    public void alContainers(ArrayList<Container> containers) {
 
         for (int i = 0; i < containers.size(); i++)
             lContainers.add(containers.get(i));
+
+    }
+
+    // Define o CCO que gere esta infraestrutura.
+    public void sCCO(CCO cco) {
+
+        this.cco = cco;
+
+    }
+
+    // Retorna o CCO que gere esta infraestrutura.
+    public CCO gCCO() {
+
+        return cco;
 
     }
 
