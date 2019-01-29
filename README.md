@@ -32,90 +32,181 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 
 ## Notações a considerar
 
-- s: set
-- g: get
 - a: add
-- r: remove
+- c: change
+- g: get
+    - gd: get destination
+    - gl: get load
+    - gm: get max
+    - gs: get source
+    - gu: get unload
+    - gw: get wait
+- gt: go to
 - l: load
+- m: max
+- ns: no set
+- r: remove
+- s: set
+    - sd: set destination
+    - sl: set load
+    - sm: set max
+    - ss: set source
+    - su: set unload
+    - sw: set wait
 - u: unload
+- w: wait
 
 ## Lista de objetos e métodos disponíveis
 
 1. CCO
-    - slPermition(Transport transport)
-    - suPermition(Transport transport)
-    - sService(Transport transport)
-    - gInfrastructures()
-    - aInfrastructure(Infrastructure infrastructure)
-    - rInfrastructure(Infrastructure infrastructure)
-    - aTransports(Transport transport)
-    - rTransports(Transport transport)
-    - gTransports()
+    <details><summary>Construtores</summary>
+    </details>
+    <details><summary>Métodos</summary>
+    <ul>
+        <li>slPermition(Transport transport)</li>
+        <li>suPermition(Transport transport)</li>
+        <li>sService(Transport transport)</li>
+        <li>gInfrastructures()</li>
+        <li>aInfrastructure(Infrastructure infrastructure)</li>
+        <li>rInfrastructure(Infrastructure infrastructure)</li>
+        <li>aTransports(Transport transport)</li>
+        <li>rTransports(Transport transport)</li>
+        <li>gTransports()</li>
+    </ul>
+    </details>
 
 2. Container
-    - sNumber(int number)
-    - gNumber()
-    - sDestination(Infrastructure infrastructure)
-    - gDestination()
-    - sTransport(Transport transport)
-    - gTransport
+    <details><summary>Construtores</summary>
+    </details>
+    <details><summary>Métodos</summary>
+    <ul>
+        <li>sNumber(int number)</li>
+        <li>gNumber()</li>
+        <li>sDestination(Infrastructure infrastructure)</li>
+        <li>gDestination()</li>
+        <li>sTransport(Transport transport)</li>
+        <li>gTransport()</li>
+    </ul>
+    </details>
     
 3. Dock (estende Infrastructure)
 
 4. Infrastructure
-    - sName(String name)
-    - gName()
-    - slSpot(Spot spot)
-    - glSpot()
-    - suSpot(Spot spot)
-    - guSpot()
-    - slContainers(ArrayList<Container> lContainers)
-    - glContainers()
-    - suContainers(ArrayList<Container> uContainers)
-    - guContainers()
-    - sPosition(Position position)
-    - gPosition
-    - sClose(boolean tf)
-    - gClose()
-    - ghmContainers(Transport transport)
-    - glPermition()
-    - guPermition()
-    - srlSpot(Transport transport)
-    - grlSpot()
-    - sruSpot(Transport transport)
-    - gruSpot()
-    - suContainers(Transport transport)
-    - sLoad(Transport transport)
-    - sUnload(Transport transport) 
-    - alContainers(ArrayList<Container> containers)
-    - sCCO(CCO cco)
-    - gCCO()
-    - finish()
-  
+    <details><summary>Construtores</summary>
+    </details>
+    <details><summary>Métodos</summary>
+    <ul>
+        <li>sName(String name)</li>
+        <li>gName()</li>
+        <li>slSpot(Spot spot)</li>
+        <li>glSpot()</li>
+        <li>suSpot(Spot spot)</li>
+        <li>guSpot()</li>
+        <li>slContainers(ArrayList<Container> lContainers)</li>
+        <li>glContainers()</li>
+        <li>suContainers(ArrayList<Container> uContainers)</li>
+        <li>guContainers()</li>
+        <li>sPosition(Position position)</li>
+        <li>gPosition()</li>
+        <li>sClose(boolean tf)</li>
+        <li>gClose()</li>
+        <li>ghmContainers(Transport transport)</li>
+        <li>glPermition()</li>
+        <li>guPermition()</li>
+        <li>srlSpot(Transport transport)</li>
+        <li>grlSpot()</li>
+        <li>sruSpot(Transport transport)</li>
+        <li>gruSpot()</li>
+        <li>suContainers(Transport transport)</li>
+        <li>sLoad(Transport transport)</li>
+        <li>sUnload(Transport transport)</li>
+        <li>alContainers(ArrayList<Container> containers)</li>
+        <li>sCCO(CCO cco)</li>
+        <li>gCCO()</li>
+        <li>finish()</li>
+    </ul>
+    </details>
 5. Position
-    - sX(int x)
-    - gX()
-    - sY(int y)
-    - gY()
-    - gDistance(Position position)
+    <details><summary>Construtores</summary>
+    </details>
+    <details><summary>Métodos</summary>
+    <ul>
+        <li>sX(int x)</li>
+        <li>gX()</li>
+        <li>sY(int y)</li>
+        <li>gY()</li>
+        <li>gDistance(Position position)</li>
+    </ul>
+    </details>
     
 6. Ship (estende Transport)
 
 7. Spot
-    - sNumber(int number)
-    - gNumber
-    - sBusy(boolean busy)
-    - gBusy()
-    - sTransport(Transport transport)
-    - gTransport()
-    - sReserve(Transport transport)
-    - gReserve()
-    - aTransport(Transport transport)
-    - rTransport()
+    <details><summary>Construtores</summary>
+    </details>
+    <details><summary>Métodos</summary>
+    <ul>
+        <li>sNumber(int number)</li>
+        <li>gNumber
+        <li>sBusy(boolean busy)</li>
+        <li>gBusy()</li>
+        <li>sTransport(Transport transport)</li>
+        <li>gTransport()</li>
+        <li>sReserve(Transport transport)</li>
+        <li>gReserve()</li>
+        <li>aTransport(Transport transport)</li>
+        <li>rTransport()</li>
+    </ul>
+    </details>
     
-8. Terminal
-9. Train
+8. Terminal (estende Infrastructure)
+
+9. Train (estende Transport)
+
 10. Transport
+    <details><summary>Construtores</summary>
+    </details>
+    <details><summary>Métodos</summary>
+    <ul>
+        <li>cDirection()</li>
+        <li>gtDestination()</li>
+        <li>sNumber(int number)</li>
+        <li>gNumber()</li>
+        <li>sSource(Infrastructure source)</li>
+        <li>gSource()</li>
+        <li>sDestination(Infrastructure destination)</li>
+        <li>gDestination
+        <li>sPosition(Position  position)</li>
+        <li>gPosition
+        <li>sState(String state)</li>
+        <li>gState()</li>
+        <li>sServices(boolean tf)</li>
+        <li>nsServices()</li>
+        <li>gServices()</li>
+        <li>ssServices(boolean tf)</li>
+        <li>gsServices()</li>
+        <li>sdServices(boolean tf)</li>
+        <li>gdServices()</li>
+        <li>slPermition(boolean tf)</li>
+        <li>glPermition()</li>
+        <li>suPermition(boolean tf)</li>
+        <li>guPermition()</li>
+        <li>swPermition(boolean tf)</li>
+        <li>gwPermition()</li>
+        <li>sContainers(Stack<Container> containers)</li>
+        <li>gContainers()</li>
+        <li>aContainer(Container contentor)</li>
+        <li>smContainers(int mContainers)</li>
+        <li>gmContainers()</li>
+        <li>sVelocity(int velocity)</li>
+        <li>gVelocity()</li>
+        <li>sCCO(CCO cco)</li>
+        <li>gCCO()</li>
+        <li>isFull()</li>
+        <li>isEmpty()</li>
+    </ul>
+    </details>
+    
 11. World
 
 ## Entidades ativas
