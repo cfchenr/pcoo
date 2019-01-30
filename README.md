@@ -321,11 +321,11 @@ public class programTest extends PApplet {
     </details>
   
 11. Truck (estende Transport)
-<details><summary>Construtores</summary>
-    <ul>
-        <li>Truck(int number, Infrastructure source, Infrastructure destination, CCO cco)</li>
-    </ul>
-</details>
+    <details><summary>Construtores</summary>
+        <ul>
+            <li>Truck(int number, Infrastructure source, Infrastructure destination, CCO cco)</li>
+        </ul>
+    </details>
 
 12.  World
 
