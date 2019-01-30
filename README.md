@@ -2,7 +2,8 @@
 
 Simulação da gestão de transporte de contentores, através de comboios e navios, entre terminais ferroviários e docas.
 
-![vscode_pcoo](https://i.gyazo.com/fc3cc5c77423bcdf025b1226609f2198.png)
+<img src="https://i.gyazo.com/fc3cc5c77423bcdf025b1226609f2198.png" alt="vscode_pcoo" width="100%"/>
+
 
 ## Simulação
 
@@ -23,6 +24,46 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 ## Interface
 
 A interface desta simulação foi criada com recurso à biblioteca [Processing](https://processing.org/).
+
+```
+    import processing.core.*;
+    import processing.event.*;
+    
+    ...
+
+    public void settings() {
+        ...
+    }
+
+    public void draw() {
+        ...
+    }
+
+    public void mouseClicked() {
+        ...
+    }
+
+    class Button {
+        ...
+    }
+
+    public static void main(String[] args) {
+        ...
+    }
+
+    ...
+```
+
+<table>
+    <tr>
+        <td>
+            <img src="https://i.gyazo.com/7a2b55dd97ecae6d6ed421d088ed321e.png" alt="interface_1" width="100%"/>
+        </td>
+        <td>
+            <img src="https://i.gyazo.com/e81f5c000c9e654308645b1abf30907a.png" alt="interface_2" width="100%"/>
+        </td>
+    </tr>
+</table>
 
 ## Bibliotecas externas
 
@@ -259,7 +300,7 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     </ul>
     </details>
     
-10.  World
+11.  World
 
 ## Entidades ativas
 
