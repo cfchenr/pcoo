@@ -60,6 +60,9 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 
 1. CCO
     <details><summary>Construtores</summary>
+    <ul>
+        <li>CCO()</li>
+    </ul>
     </details>
     <details><summary>Métodos</summary>
     <ul>
@@ -77,6 +80,9 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 
 2. Container
     <details><summary>Construtores</summary>
+    <ul>
+        <li>Container(int number, Infrastructure destination)</li>
+    </ul>
     </details>
     <details><summary>Métodos</summary>
     <ul>
@@ -123,7 +129,6 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
         <li>alContainers(ArrayList<Container> containers)</li>
         <li>sCCO(CCO cco)</li>
         <li>gCCO()</li>
-        <li>finish()</li>
     </ul>
     </details>
 5. Position
@@ -196,6 +201,7 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
         <li>sContainers(Stack<Container> containers)</li>
         <li>gContainers()</li>
         <li>aContainer(Container contentor)</li>
+        <li>rContainer()</li>
         <li>smContainers(int mContainers)</li>
         <li>gmContainers()</li>
         <li>sVelocity(int velocity)</li>
@@ -228,7 +234,6 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 
 * [ ] Criar World.java;
 * [ ] Comentar Transport.java;
-* [ ] Comentar Train.java;
 * [ ] Garantir que os comboios só carregam e descarregam em terminais (analogamente o mesmo processo para os navios <-> docas);
 
 ## Contribuidores
