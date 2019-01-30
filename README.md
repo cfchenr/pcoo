@@ -210,7 +210,7 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     </ul>
     </details>
 
-10.  Transport
+10. Transport
     <details><summary>Construtores</summary>
     <ul>
         <li>Transport(int number, Infrastructure source, Infrastructure destination, CCO cco)</li>
@@ -259,7 +259,7 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     </ul>
     </details>
     
-11.  World
+10.  World
 
 ## Entidades ativas
 
