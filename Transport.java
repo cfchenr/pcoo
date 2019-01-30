@@ -11,6 +11,7 @@ public class Transport implements Runnable {
     private boolean sServices, dServices, permitionToLoad, permitionToUnload, permitionToWait;
     private Position position;
     private String state;
+    private String type;
 
     public Transport(int number, Infrastructure source, Infrastructure destination, CCO cco) {
 
@@ -349,6 +350,20 @@ public class Transport implements Runnable {
     public CCO gCCO() {
 
         return cco;
+
+    }
+
+    // Define o tipo deste transporte.
+    public void sType(String type) {
+
+        this.type = type;
+
+    }
+
+    // Retorna o tipo deste transporte.
+    public String gType() {
+
+        return type;
 
     }
 

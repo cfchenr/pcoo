@@ -13,6 +13,7 @@ public class Infrastructure {
     private BinarySemaphore slMutex, suMutex;
     private boolean close;
     private Position position;
+    private String type;
 
     public Infrastructure(String name, int x, CCO cco) {
 
@@ -151,13 +152,33 @@ public class Infrastructure {
         // encontrar um que ainda não tenha nenhum transporte associado ou que o seu
         // transporte seja o transporte que efetuou o pedido, então passa a ser
         // verdadeiro o valor que define se existe ou não contentores a mover.
+
+        // Existe a verificação que comboios apenas podem circular entre terminais e
+        // navios entre as docas. Para serviços entre docas e terminais apenas podem ser
+        // usados camiões.
         for (int i = 0; i < glContainers().size(); i++)
 
             if (glContainers().get(i).gTransport() == null || glContainers().get(i).gTransport() == transport) {
 
-                check = true;
-                transport.sDestination(glContainers().get(i).gDestination());
-                break;
+                if (transport.gType() == "Train" && glContainers().get(i).gDestination().gType() == "Terminal") {
+
+                    check = true;
+                    transport.sDestination(glContainers().get(i).gDestination());
+                    break;
+
+                } else if (transport.gType() == "Ship" && glContainers().get(i).gDestination().gType() == "Dock") {
+
+                    check = true;
+                    transport.sDestination(glContainers().get(i).gDestination());
+                    break;
+
+                } else if (transport.gType() == "Truck") {
+
+                    check = true;
+                    transport.sDestination(glContainers().get(i).gDestination());
+                    break;
+
+                }
 
             }
 
@@ -177,14 +198,34 @@ public class Infrastructure {
                 // destino do transporte ou um destino mais próximo do que do local onde se
                 // encontra) enquanto o número de contentores a ser transportado não exceda a
                 // capacidade máxima do transporte.
+
+                // Existe a verificação que comboios apenas podem circular entre terminais e
+                // navios entre as docas. Para serviços entre docas e terminais apenas podem ser
+                // usados camiões.
                 for (int i = 0; i < glContainers().size(); i++) {
 
                     if (glContainers().get(i).gTransport() == null
                             && glContainers().get(i).gDestination() == select.peek()
                             && size < transport.gmContainers()) {
 
-                        glContainers().get(i).sTransport(transport);
-                        size++;
+                        if (transport.gType() == "Train"
+                                && glContainers().get(i).gDestination().gType() == "Terminal") {
+
+                            glContainers().get(i).sTransport(transport);
+                            size++;
+
+                        } else if (transport.gType() == "Ship"
+                                && glContainers().get(i).gDestination().gType() == "Dock") {
+
+                            glContainers().get(i).sTransport(transport);
+                            size++;
+
+                        } else if (transport.gType() == "Truck") {
+
+                            glContainers().get(i).sTransport(transport);
+                            size++;
+
+                        }
 
                     }
 
@@ -297,7 +338,7 @@ public class Infrastructure {
 
             for (int i = 0; i < glContainers().size(); i++) {
 
-                if ((glContainers().get(i).gTransport() == null || glContainers().get(i).gTransport() == transport)
+                if ((glContainers().get(i).gTransport() == transport)
                         && glContainers().get(i).gDestination() == select.peek() && size < transport.gmContainers()) {
 
                     transport.aContainer(glContainers().get(i));
@@ -381,7 +422,6 @@ public class Infrastructure {
 
     }
 
-    // Define o CCO que gere esta infraestrutura.
     public void sCCO(CCO cco) {
 
         this.cco = cco;
@@ -392,6 +432,20 @@ public class Infrastructure {
     public CCO gCCO() {
 
         return cco;
+
+    }
+
+    // Define o tipo desta infraestrutura.
+    public void sType(String type) {
+
+        this.type = type;
+
+    }
+
+    // Retorna o tipo desta infraestrutura.
+    public String gType() {
+
+        return type;
 
     }
 

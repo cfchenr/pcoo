@@ -8,6 +8,7 @@ public class Dock extends Infrastructure {
     public Dock(String name, int x, CCO cco) {
 
         super(name, x, cco);
+        sType("Dock");
 
     }
 
