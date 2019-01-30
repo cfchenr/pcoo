@@ -26,40 +26,56 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 A interface desta simulação foi criada com recurso à biblioteca [Processing](https://processing.org/).
 
 ```
-    import processing.core.*;
-    import processing.event.*;
+import processing.core.*;
+import processing.event.*;
     
+public class programTest extends PApplet {
+
     ...
 
     public void settings() {
+
         ...
+
     }
 
     public void draw() {
+
         ...
+
     }
 
     public void mouseClicked() {
+
         ...
+
     }
 
     class Button {
+
         ...
+
     }
 
     public static void main(String[] args) {
+
+        PApplet.main(new String[] { programTest.class.getName() });
+
         ...
+
     }
 
     ...
+
+}
 ```
 
-<table style="border: none !important;">
-    <tr style="border: none !important;">
-        <td style="border: none !important;">
+<table>
+    <tr>
+        <td>
             <img src="https://i.gyazo.com/7a2b55dd97ecae6d6ed421d088ed321e.png" alt="interface_1" width="100%"/>
         </td>
-        <td style="border: none !important;">
+        <td>
             <img src="https://i.gyazo.com/e81f5c000c9e654308645b1abf30907a.png" alt="interface_2" width="100%"/>
         </td>
     </tr>
