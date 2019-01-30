@@ -56,10 +56,10 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
 
 <table>
     <tr>
-        <td>
+        <td style="border: none !important;">
             <img src="https://i.gyazo.com/7a2b55dd97ecae6d6ed421d088ed321e.png" alt="interface_1" width="100%"/>
         </td>
-        <td>
+        <td style="border: none !important;">
             <img src="https://i.gyazo.com/e81f5c000c9e654308645b1abf30907a.png" alt="interface_2" width="100%"/>
         </td>
     </tr>
