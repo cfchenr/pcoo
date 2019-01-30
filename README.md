@@ -54,8 +54,8 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     ...
 ```
 
-<table>
-    <tr>
+<table style="border: none !important;">
+    <tr style="border: none !important;">
         <td style="border: none !important;">
             <img src="https://i.gyazo.com/7a2b55dd97ecae6d6ed421d088ed321e.png" alt="interface_1" width="100%"/>
         </td>
