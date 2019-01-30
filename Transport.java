@@ -35,56 +35,55 @@ public class Transport implements Runnable {
 
             do {
 
-                // Se o comboio estiver carregado, aguarda permissão para descarregar,
-                // descarrega e pára (aguarda por novos serviços)
-                if (containers.size() > 0) {
+                // Se o transporte estiver carregado, aguarda permissão para descarregar,
+                // descarrega e pára (aguarda por novos serviços).
+                if (gContainers().size() > 0) {
 
                     do {
 
-                        state = "waiting for unloading";
+                        sState("waiting for unloading");
 
-                        cco.suPermition(this);
+                        gCCO().suPermition(this);
 
-                    } while (!permitionToUnload);
+                    } while (!guPermition());
 
-                    state = "unloading";
+                    sState("unloading");
 
-                    source.sUnload(this);
+                    gSource().sUnload(this);
 
-                    sServices = false;
-                    dServices = false;
-                    state = "stop";
+                    nsServices();
+
+                    sState("stop");
 
                     // Se estiver descarregado e se há serviços onde está, aguarda permissão para
-                    // carregar, carrega e vai para o seu destino
-                } else if (sServices) {
+                    // carregar, carrega e vai para o seu destino.
+                } else if (gsServices()) {
 
                     do {
 
-                        state = "waiting for load";
+                        sState("waiting for load");
 
-                        cco.slPermition(this);
+                        gCCO().slPermition(this);
 
-                    } while (!permitionToLoad);
+                    } while (!glPermition());
 
-                    state = "loading";
+                    sState("loading");
 
-                    source.sLoad(this);
-
-                    gtDestination();
-
-                    // Se estiver descarregado e se há serviços noutro local, vai para lá
-                } else if (dServices) {
+                    gSource().sLoad(this);
 
                     gtDestination();
 
-                    sServices = false;
-                    dServices = false;
+                    // Se estiver descarregado e se há serviços noutro local, vai para lá.
+                } else if (gdServices()) {
 
-                    // Se estiver descarregado e não há serviços, pára
+                    gtDestination();
+
+                    nsServices();
+
+                    // Se estiver descarregado e não há serviços, pára.
                 } else {
 
-                    state = "stop";
+                    sState("stop");
 
                 }
 
@@ -98,80 +97,92 @@ public class Transport implements Runnable {
 
     }
 
+    // Mudança de direção, ou seja, o seu destino passa a ser a origem e vice-versa.
     public void cDirection() throws InterruptedException {
 
         Thread.sleep((long) (1250));
-        Infrastructure temp = source;
-        source = destination;
-        destination = temp;
+        Infrastructure temp = gSource();
+        sSource(gDestination());
+        sDestination(temp);
 
     }
 
+    // Faz o transporte avançar para o seu destino.
     public void gtDestination() throws InterruptedException {
 
-        state = "in transit";
+        sState("in transit");
 
-        Thread.sleep((long) (3000 * (10 * source.gPosition().gDistance(destination.gPosition())) / velocity));
-        position = destination.gPosition();
+        Thread.sleep((long) (3000 * (10 * gSource().gPosition().gDistance(gDestination().gPosition())) / gVelocity()));
+        sPosition(gDestination().gPosition());
 
         cDirection();
 
     }
 
+    // Define o número do transporte.
     public void sNumber(int number) {
 
         this.number = number;
 
     }
 
+    // Obtém o número do transporte.
     public int gNumber() {
 
         return number;
 
     }
 
+    // Define a origem do transporte.
     public void sSource(Infrastructure source) {
 
         this.source = source;
 
     }
 
+    // Obtém a origem do transporte.
     public Infrastructure gSource() {
 
         return source;
 
     }
 
+    // Define o destino do transporte.
     public void sDestination(Infrastructure destination) {
 
         this.destination = destination;
 
     }
 
+    // Obtém o destino do transporte.
     public Infrastructure gDestination() {
 
         return destination;
 
     }
 
+    // Define a posição do transporte.
     public void sPosition(Position position) {
 
         this.position = position;
 
     }
 
+    // Obtém a posição do transporte.
     public Position gPosition() {
 
         return position;
 
     }
 
+    // Define o estado do transporte.
     public void sState(String state) {
 
         this.state = state;
 
     }
 
+    // Obtém o estado do transporte.
     public String gState() {
 
         return state;
@@ -272,7 +283,13 @@ public class Transport implements Runnable {
 
     public void aContainer(Container contentor) {
 
-        containers.push(contentor);
+        gContainers().push(contentor);
+
+    }
+
+    public Container rContainer () {
+
+        return gContainers().pop();
 
     }
 
@@ -312,15 +329,17 @@ public class Transport implements Runnable {
 
     }
 
+    // Obtém se o transporte está cheio.
     public boolean isFull() {
 
-        return containers.size() == mContainers;
+        return gContainers().size() == gmContainers();
 
     }
 
+    // Obtém se o transporte está vazio.
     public boolean isEmpty() {
 
-        return containers.size() == 0;
+        return gContainers().size() == 0;
 
     }
 

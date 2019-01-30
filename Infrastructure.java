@@ -129,29 +129,35 @@ public class Infrastructure {
 
     }
 
+    // Obter e reservar os contentores a mover.
     public boolean ghmContainers(Transport transport) throws InterruptedException {
 
         boolean check = false;
 
+        // Enquanto o local de descarregamento estiver ocupado, obtém o comboio que está
+        // lá e se o seu estado for a descarregar ou em espera para descarregar, faz o
+        // processo esperar.
         while (guSpot().gTransport() != null) {
 
-            for (int i = 0; i < cco.gTransports().size(); i++)
-                if (cco.gTransports().get(i).gPosition() == position
-                        && (cco.gTransports().get(i).gState() == "unloading"
-                                || cco.gTransports().get(i).gState() == "waiting for unload"))
+            for (int i = 0; i < gCCO().gTransports().size(); i++)
+                if (gCCO().gTransports().get(i).gPosition() == gPosition()
+                        && (gCCO().gTransports().get(i).gState() == "unloading"
+                                || gCCO().gTransports().get(i).gState() == "waiting for unload"))
 
                     Thread.sleep((long) (1250));
 
         }
 
-        check = false;
+        // Percorre todos os contentores que estão na lista de carregamento e quando
+        // encontrar um que ainda não tenha nenhum transporte associado ou que o seu
+        // transporte seja o transporte que efetuou o pedido, então passa a ser
+        // verdadeiro o valor que define se existe ou não contentores a mover.
+        for (int i = 0; i < glContainers().size(); i++)
 
-        for (int i = 0; i < lContainers.size(); i++)
-
-            if (lContainers.get(i).gTransport() == null || lContainers.get(i).gTransport() == transport) {
+            if (glContainers().get(i).gTransport() == null || glContainers().get(i).gTransport() == transport) {
 
                 check = true;
-                transport.sDestination(lContainers.get(i).gDestination());
+                transport.sDestination(glContainers().get(i).gDestination());
                 break;
 
             }
@@ -165,14 +171,20 @@ public class Infrastructure {
             int size = 0;
             boolean close = false;
 
-            while (lContainers.size() > 0 && close == false) {
+            while (glContainers().size() > 0 && close == false) {
 
-                for (int i = 0; i < lContainers.size(); i++) {
+                // Reserva os contentores que estão disponíveis para carregamento (ou seja, não
+                // tenham nenhum transporte associado e cujo o seu destino é o mesmo que o
+                // destino do transporte ou um destino mais próximo do que do local onde se
+                // encontra) enquanto o número de contentores a ser transportado não exceda a
+                // capacidade máxima do transporte.
+                for (int i = 0; i < glContainers().size(); i++) {
 
-                    if (lContainers.get(i).gTransport() == null && lContainers.get(i).gDestination() == select.peek()
+                    if (glContainers().get(i).gTransport() == null
+                            && glContainers().get(i).gDestination() == select.peek()
                             && size < transport.gmContainers()) {
 
-                        lContainers.get(i).sTransport(transport);
+                        glContainers().get(i).sTransport(transport);
                         size++;
 
                     }
@@ -182,20 +194,24 @@ public class Infrastructure {
 
                 }
 
+                // Se o transporte ainda não estiver lotado obtém uma infraestrutura que esteja
+                // mais próxima do local de destino do transporte do que do local de origem do
+                // transporte. (Este processo é repetido até percorrer todas as infraestruturas
+                // ou o transporte estiver totalmente preenchido).
                 if (size == transport.gmContainers())
                     break;
 
                 Infrastructure selectT = this;
-                double minDistance = position.gDistance(transport.gDestination().gPosition());
                 close = true;
 
-                for (int i = 0; i < cco.gInfrastructures().size(); i++)
+                for (int i = 0; i < gCCO().gInfrastructures().size(); i++)
 
-                    if (!select.contains(cco.gInfrastructures().get(i))
-                            && position.gDistance(cco.gInfrastructures().get(i).gPosition()) > transport.gDestination()
-                                    .gPosition().gDistance(cco.gInfrastructures().get(i).gPosition())) {
+                    if (!select.contains(gCCO().gInfrastructures().get(i))
+                            && gPosition().gDistance(gCCO().gInfrastructures().get(i).gPosition()) > transport
+                                    .gDestination().gPosition()
+                                    .gDistance(gCCO().gInfrastructures().get(i).gPosition())) {
 
-                        selectT = cco.gInfrastructures().get(i);
+                        selectT = gCCO().gInfrastructures().get(i);
                         close = false;
 
                     }
@@ -252,7 +268,7 @@ public class Infrastructure {
 
     }
 
-    // Quando descarregados, define o transporte associado a cada contentore como
+    // Quando descarregados, define o transporte associado a cada contentor como
     // "null".
     private void suContainers(Transport transport) throws InterruptedException {
 
@@ -262,10 +278,14 @@ public class Infrastructure {
     }
 
     // Carrega o transporte.
+    // O algoritmo implementado neste método segue a ideia do algoritmo implementado
+    // no método ghmContainers(Transport transport), contudo neste método o
+    // algoritmo remove os contentores da lista de carregamentos e adiciona-os ao
+    // transporte em causa.
     public void sLoad(Transport transport) throws InterruptedException {
 
         slMutex.acquire();
-        lSpot.aTransport(transport);
+        glSpot().aTransport(transport);
 
         Stack<Infrastructure> select = new Stack<Infrastructure>();
         select.add(transport.gSource());
@@ -276,13 +296,13 @@ public class Infrastructure {
 
         while (size < transport.gmContainers() && close == false) {
 
-            for (int i = 0; i < lContainers.size(); i++) {
+            for (int i = 0; i < glContainers().size(); i++) {
 
-                if ((lContainers.get(i).gTransport() == null || lContainers.get(i).gTransport() == transport)
-                        && lContainers.get(i).gDestination() == select.peek() && size < transport.gmContainers()) {
+                if ((glContainers().get(i).gTransport() == null || glContainers().get(i).gTransport() == transport)
+                        && glContainers().get(i).gDestination() == select.peek() && size < transport.gmContainers()) {
 
-                    transport.aContainer(lContainers.get(i));
-                    lContainers.remove(i);
+                    transport.aContainer(glContainers().get(i));
+                    glContainers().remove(i);
                     i--;
                     Thread.sleep((long) (1250));
                     size++;
@@ -298,16 +318,15 @@ public class Infrastructure {
                 break;
 
             Infrastructure selectT = this;
-            double minDistance = position.gDistance(transport.gDestination().gPosition());
             close = true;
 
-            for (int i = 0; i < cco.gInfrastructures().size(); i++)
+            for (int i = 0; i < gCCO().gInfrastructures().size(); i++)
 
-                if (!select.contains(cco.gInfrastructures().get(i))
-                        && position.gDistance(cco.gInfrastructures().get(i).gPosition()) > transport.gDestination()
-                                .gPosition().gDistance(cco.gInfrastructures().get(i).gPosition())) {
+                if (!select.contains(gCCO().gInfrastructures().get(i))
+                        && gPosition().gDistance(gCCO().gInfrastructures().get(i).gPosition()) > transport
+                                .gDestination().gPosition().gDistance(gCCO().gInfrastructures().get(i).gPosition())) {
 
-                    selectT = cco.gInfrastructures().get(i);
+                    selectT = gCCO().gInfrastructures().get(i);
                     close = false;
 
                 }
@@ -316,7 +335,7 @@ public class Infrastructure {
 
         }
 
-        lSpot.rTransport();
+        glSpot().rTransport();
         slMutex.release();
 
     }
@@ -325,31 +344,41 @@ public class Infrastructure {
     public void sUnload(Transport transport) throws InterruptedException {
 
         suMutex.acquire();
+        // Informa que o transporte chegou ao local de descarregamento.
+        guSpot().aTransport(transport);
+        // Remove a associação entre os contentores transportados e o transporte, uma
+        // vez que estes vão ser descarregados.
         suContainers(transport);
-        uSpot.aTransport(transport);
 
+        // Enquanto o transporte não estiver vazio, se o destino dos contentores forem o
+        // local onde se encontram, então vão para a lista de contentores decarregados,
+        // caso contrário vão para a lista de contentores a carregar, para que um outro
+        // transporte os leve para o seu destino ou um local mais próximo do seu
+        // destino.
         while (!transport.isEmpty()) {
 
             if (transport.gContainers().peek().gDestination() == this)
-                uContainers.add(transport.gContainers().pop());
+                guContainers().add(transport.rContainer());
 
             else
-                lContainers.add(transport.gContainers().pop());
+                glContainers().add(transport.rContainer());
 
             Thread.sleep((long) (1250));
 
         }
 
-        uSpot.rTransport();
+        // Informa que o transporte terminou o descarregamento e remove-o do local de
+        // descarregamento.
+        guSpot().rTransport();
         suMutex.release();
 
     }
 
-    // Adiciona containers para carregar, a esta infraestrutura.
+    // Adiciona contentores para carregar, a esta infraestrutura.
     public void alContainers(ArrayList<Container> containers) {
 
         for (int i = 0; i < containers.size(); i++)
-            lContainers.add(containers.get(i));
+            glContainers().add(containers.get(i));
 
     }
 
@@ -364,12 +393,6 @@ public class Infrastructure {
     public CCO gCCO() {
 
         return cco;
-
-    }
-
-    public void finish() {
-
-        log.close();
 
     }
 

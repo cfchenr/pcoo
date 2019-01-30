@@ -28,14 +28,13 @@ public class CCO implements Runnable {
         try {
 
             // Percorre todos os transportes existentes no cco e caso exista algum
-            // transportes
-            // parado verifica se existem algum serviço para ele realizar.
+            // transportes parado verifica se existem algum serviço para ele realizar.
             do
-                for (int i = 0; i < transports.size(); i++)
+                for (int i = 0; i < gTransports().size(); i++)
 
-                    if (transports.get(i).gState() == "stop")
+                    if (gTransports().get(i).gState() == "stop")
 
-                        sServices(transports.get(i));
+                        sServices(gTransports().get(i));
 
             while (true);
 
@@ -115,49 +114,45 @@ public class CCO implements Runnable {
         sMutex.acquire();
 
         // Se existirem contentores para serem movidos a partir da origem do
-        // transportes,
-        // então define os serviços do transportes como "true".
+        // transportes, enttão define os serviços do transportes como "true".
         if (transport.gSource().ghmContainers(transport))
 
             transport.sServices(true);
 
         // Caso não existam contentores para serem movidos a partir da origem do
         // transportes, procura a infraestrutura mais próxima deste, que contenham
-        // contentores
-        // para mover.
+        // contentores para mover.
         else {
 
             double minDistance;
             Infrastructure destination = transport.gSource();
 
-            if (transport.gSource() != infrastructures.get(0))
+            if (transport.gSource() != gInfrastructures().get(0))
 
-                minDistance = transport.gSource().gPosition().gDistance(infrastructures.get(0).gPosition());
+                minDistance = transport.gSource().gPosition().gDistance(gInfrastructures().get(0).gPosition());
 
             else
 
-                minDistance = transport.gSource().gPosition().gDistance(infrastructures.get(1).gPosition());
+                minDistance = transport.gSource().gPosition().gDistance(gInfrastructures().get(1).gPosition());
 
             // Percorre todas as infraestruturas para verifiar qual é a infraestrutura mais
-            // próxima que
-            // contém contentores para carregar.
-            for (int i = 0; i < infrastructures.size(); i++) {
+            // próxima que contém contentores para carregar.
+            for (int i = 0; i < gInfrastructures().size(); i++) {
 
-                if (transport.gSource() != infrastructures.get(i) && infrastructures.get(i).glContainers().size() > 0
+                if (transport.gSource() != infrastructures.get(i) && gInfrastructures().get(i).glContainers().size() > 0
                         && transport.gSource().gPosition()
-                                .gDistance(infrastructures.get(i).gPosition()) < minDistance) {
+                                .gDistance(gInfrastructures().get(i).gPosition()) < minDistance) {
 
-                    minDistance = transport.gSource().gPosition().gDistance(infrastructures.get(i).gPosition());
+                    minDistance = transport.gSource().gPosition().gDistance(gInfrastructures().get(i).gPosition());
 
-                    destination = infrastructures.get(i);
+                    destination = gInfrastructures().get(i);
 
                 }
 
             }
 
             // Verifica se a infraestrutura encontrada é diferente da infraestrutura onde o
-            // transportes se
-            // encontra.
+            // transportes se encontra.
             if (destination != transport.gSource()) {
 
                 // Verifica se a infraestrutura encontrada contém contentores para mover.
@@ -194,36 +189,38 @@ public class CCO implements Runnable {
     // Adiciona a @infrastructure para ser gerenciado por este cco.
     public void aInfrastructure(Infrastructure infrastructure) {
 
-        infrastructures.add(infrastructure);
+        gInfrastructures().add(infrastructure);
 
     }
 
     // Remove a @infrastructure, deixando este de ser gerenciado por este cco.
     public void rInfrastructure(Infrastructure infrastructure) {
 
-        infrastructures.remove(infrastructure);
+        gInfrastructures().remove(infrastructure);
 
+    }
+
+    
+    // Retorna a lista de transportes gerenciados por este cco.
+    public ArrayList<Transport> gTransports() {
+        
+        return transports;
+        
     }
 
     // Adiciona o @transport para ser gerenciado por este cco.
     public void aTransport(Transport transport) {
 
-        transports.add(transport);
+        gTransports().add(transport);
 
     }
 
     // Remove o @transport, deixando este de ser gerenciado por este cco.
     public void rTransport(Transport transport) {
 
-        transports.remove(transport);
+        gTransports().remove(transport);
 
     }
 
-    // Retorna a lista de transportes gerenciados por este cco.
-    public ArrayList<Transport> gTransports() {
 
-        return transports;
-
-    }
-    
 }
