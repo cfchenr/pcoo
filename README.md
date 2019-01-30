@@ -76,6 +76,7 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     </details>
     <details><summary>Métodos</summary>
     <ul>
+        <li>run()</li>
         <li>slPermition(Transport transport)</li>
         <li>suPermition(Transport transport)</li>
         <li>sService(Transport transport)</li>
@@ -106,9 +107,17 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     </details>
     
 3. Dock (estende Infrastructure)
+    <details><summary>Construtores</summary>
+    <ul>
+        <li>Dock(String name, int x, CCO cco)</li>
+    </ul>
+    </details>
 
 4. Infrastructure
     <details><summary>Construtores</summary>
+    <ul>
+        <li>Infrastructure(String name, int x, CCO cco)</li>
+    </ul>
     </details>
     <details><summary>Métodos</summary>
     <ul>
@@ -141,8 +150,13 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
         <li>gCCO()</li>
     </ul>
     </details>
+
 5. Position
     <details><summary>Construtores</summary>
+    <ul>
+        <li>Position(int x)</li>
+        <li>Position(int x, int y)</li>
+    </ul>
     </details>
     <details><summary>Métodos</summary>
     <ul>
@@ -155,9 +169,17 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     </details>
     
 6. Ship (estende Transport)
+    <details><summary>Construtores</summary>
+    <ul>
+        <li>Ship(int number, Dock source, Dock destination, CCO cco)</li>
+    </ul>
+    </details>
 
 7. Spot
     <details><summary>Construtores</summary>
+    <ul>
+        <li>Spot(int number)</li>
+    </ul>
     </details>
     <details><summary>Métodos</summary>
     <ul>
@@ -175,14 +197,28 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     </details>
     
 8. Terminal (estende Infrastructure)
+    <details><summary>Construtores</summary>
+    <ul>
+        <li>Terminal(String name, int x, CCO cco)</li>
+    </ul>
+    </details>
 
 9. Train (estende Transport)
-
-10. Transport
     <details><summary>Construtores</summary>
+    <ul>
+        <li>Train(int number, Dock source, Dock destination, CCO cco)</li>
+    </ul>
+    </details>
+
+10.  Transport
+    <details><summary>Construtores</summary>
+    <ul>
+        <li>Transport(int number, Infrastructure source, Infrastructure destination, CCO cco)</li>
+    </ul>
     </details>
     <details><summary>Métodos</summary>
     <ul>
+        <li>run()</li>
         <li>cDirection()</li>
         <li>gtDestination()</li>
         <li>sNumber(int number)</li>
@@ -223,7 +259,7 @@ A interface desta simulação foi criada com recurso à biblioteca [Processing](
     </ul>
     </details>
     
-11. World
+11.  World
 
 ## Entidades ativas
 

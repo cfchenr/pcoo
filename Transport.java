@@ -189,6 +189,7 @@ public class Transport implements Runnable {
 
     }
 
+    // Definir o estado dos serviços deste transporte.
     public void sServices(boolean tf) {
 
         ssServices(tf);
@@ -196,6 +197,7 @@ public class Transport implements Runnable {
 
     }
 
+    // Definir ambos os estados de serviços deste transporte como false.
     public void nsServices() {
 
         ssServices(false);
@@ -203,126 +205,147 @@ public class Transport implements Runnable {
 
     }
 
+    // Obter os estados dos serviços deste transporte.
     public boolean gServices() {
 
         return (gsServices() && gdServices());
 
     }
 
+    // Definir o estado dos serviços na origem deste transporte.
     public void ssServices(boolean tf) {
 
         sServices = tf;
 
     }
 
+    // Obter o estado dos serviços na origem deste transporte.
     public boolean gsServices() {
 
         return sServices;
 
     }
 
+    // Definir o estado dos serviços no destino deste transporte.
     public void sdServices(boolean tf) {
 
         dServices = tf;
 
     }
 
+    // Obter o estado dos serviços no destino deste transporte.
     public boolean gdServices() {
 
         return dServices;
 
     }
 
+    // Definir a permição para carregar.
     public void slPermition(boolean tf) {
 
         permitionToLoad = tf;
 
     }
 
+    // Obter a permição para carregar.
     public boolean glPermition() {
 
         return permitionToLoad;
 
     }
 
+    // Definir a permição para descarregar.
     public void suPermition(boolean tf) {
 
         permitionToUnload = tf;
 
     }
 
+    // Obter a permição para descarregar.
     public boolean guPermition() {
 
         return permitionToUnload;
 
     }
 
+    // Definir a permição para esperar.
     public void swPermition(boolean tf) {
 
         permitionToWait = tf;
 
     }
 
+    // Obter a permição para esperar.
     public boolean gwPermition() {
 
         return permitionToWait;
 
     }
 
+    // Definir a lista de contentores deste transporte.
     public void sContainers(Stack<Container> containers) {
 
         this.containers = containers;
 
     }
 
+    // Obter a lista de contentores deste transporte.
     public Stack<Container> gContainers() {
 
         return containers;
 
     }
 
+    // Adicionar um contentor a este transporte.
     public void aContainer(Container contentor) {
 
         gContainers().push(contentor);
 
     }
 
+    // Remover um contentor a este transporte.
     public Container rContainer () {
 
         return gContainers().pop();
 
     }
 
+    // Definir o número máximo de contentores deste transporte.    
     public void smContainers(int mContainers) {
 
         this.mContainers = mContainers;
 
     }
 
+    // Obter o número máximo de contentores deste transporte.
     public int gmContainers() {
 
         return mContainers;
 
     }
 
+    // Definir a velocidade deste transporte.
     public void sVelocity(int velocity) {
 
         this.velocity = velocity;
 
     }
 
+    // Obter a velocidade deste transporte.
     public int gVelocity() {
 
         return velocity;
 
     }
 
+    // Definir o CCO que gere deste transporte.
     public void sCCO(CCO cco) {
 
         this.cco = cco;
 
     }
 
+    // Obter o CCO que gere deste transporte.
     public CCO gCCO() {
 
         return cco;

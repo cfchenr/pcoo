@@ -7,7 +7,6 @@ public class Infrastructure {
 
     private String name;
     private Spot lSpot, uSpot;
-    private WriteLogFile log;
     private ArrayList<Container> lContainers;
     private ArrayList<Container> uContainers;
     private CCO cco;
