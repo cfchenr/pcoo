@@ -20,6 +20,16 @@ As infraestruturas contém locais de carga e descarga, uma lista de contentores 
 Os transportes contém um limite de carga máximo e uma velocidade (não necessáriamente iguais para os diversos transportes).
 Cada um destes objetos contém indicadores sobre as permições atribuidas a eles (carregar, descarregar ou esperar), um estado, uma infraestrutura de origem e uma de destino, uma lista de contentores a ou para transportar e a sua posição.
 
+## Interface
+
+A interface desta simulação foi criada com recurso à biblioteca [Processing](https://processing.org/).
+
+## Bibliotecas externas
+
+- [Processing](https://processing.org/)
+- [pt.ua.concurrent](http://sweet.ua.pt/mos/pt.ua.concurrent/index.xhtml)
+- [WriteLogFile](https://github.com/cfchenr/WriteLogFile)
+
 ## Fluxo da simulação (Ideia implementada)
 
 1.
@@ -232,8 +242,8 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 
 ## TODO
 
+* [ ] Criar asserções;
 * [ ] Criar World.java;
-* [ ] Comentar Transport.java;
 * [ ] Garantir que os comboios só carregam e descarregam em terminais (analogamente o mesmo processo para os navios <-> docas);
 
 ## Contribuidores
