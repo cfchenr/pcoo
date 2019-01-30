@@ -227,9 +227,6 @@ Cada um destes objetos contém indicadores sobre as permições atribuidas a ele
 ## TODO
 
 * [ ] Criar World.java;
-* [ ] Comentar Infrastructure.java; 
-* [ ] Comentar Position.java;
-* [ ] Comentar Spot.java;
 * [ ] Comentar Transport.java;
 * [ ] Comentar Train.java;
 * [ ] Garantir que os comboios só carregam e descarregam em terminais (analogamente o mesmo processo para os navios <-> docas);
