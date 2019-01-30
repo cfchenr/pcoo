@@ -7,9 +7,9 @@ Simulação da gestão de transporte de contentores, através de comboios e navi
 
 ## Simulação
 
-Este software simula uma proposta para gerir contentores disponíveis em diversos terminas e docas, recorrendo a máquinas ferroviárias e/ou navios.
+Este software simula uma proposta para gerir contentores disponíveis em diversos terminas e docas, recorrendo a máquinas ferroviárias, navios e camiões.
 
-Existe uma entidade (**World**) que gera centros de controlo e operações (**CCO**), diversos terminais (**Terminal**) e docas (**Dock**), comboios (**Train**) e navios (**Ship**) e ainda contentores (**Container**) com distintos destinos.
+Existe uma entidade (**World**) que gera centros de controlo e operações (**CCO**), diversos terminais (**Terminal**) e docas (**Dock**), comboios (**Train**), navios (**Ship**), camiões (**Truck**) e ainda contentores (**Container**) com distintos destinos.
 
 O *núcleo* desta gestão é realizada essencialmente através dos centros de controlo e operações cujo as suas principais tarefas são atribuir permissões para um determinado transporte poder carregar e descarregar nas suas  origens e destinos (respetivamente).
 
@@ -205,6 +205,8 @@ public class programTest extends PApplet {
         <li>alContainers(ArrayList<Container> containers)</li>
         <li>sCCO(CCO cco)</li>
         <li>gCCO()</li>
+        <li>sType(String type)</li>
+        <li>gType()</li>
     </ul>
     </details>
 
@@ -228,7 +230,7 @@ public class programTest extends PApplet {
 6. Ship (estende Transport)
     <details><summary>Construtores</summary>
     <ul>
-        <li>Ship(int number, Dock source, Dock destination, CCO cco)</li>
+        <li>Ship(int number, Infrastructure source, Infrastructure destination, CCO cco)</li>
     </ul>
     </details>
 
@@ -263,7 +265,7 @@ public class programTest extends PApplet {
 9. Train (estende Transport)
     <details><summary>Construtores</summary>
     <ul>
-        <li>Train(int number, Dock source, Dock destination, CCO cco)</li>
+        <li>Train(int number, Infrastructure source, Infrastructure destination, CCO cco)</li>
     </ul>
     </details>
 
@@ -311,18 +313,27 @@ public class programTest extends PApplet {
         <li>gVelocity()</li>
         <li>sCCO(CCO cco)</li>
         <li>gCCO()</li>
+        <li>sType(String type)</li>
+        <li>gType()</li>
         <li>isFull()</li>
         <li>isEmpty()</li>
     </ul>
     </details>
-    
-11.  World
+  
+11. Truck (estende Transport)
+<details><summary>Construtores</summary>
+    <ul>
+        <li>Truck(int number, Infrastructure source, Infrastructure destination, CCO cco)</li>
+    </ul>
+</details>
+
+12.  World
 
 ## Entidades ativas
 
 1. World
 2. CCO
-3. Transport (consequentemente Train e Ship)
+3. Transport (consequentemente Train, Ship e Truck)
 
 ## Objetos partilhados
 
@@ -336,8 +347,6 @@ public class programTest extends PApplet {
 ## TODO
 
 * [ ] Criar asserções;
-* [ ] Criar World.java;
-* [ ] Garantir que os comboios só carregam e descarregam em terminais (analogamente o mesmo processo para os navios <-> docas);
 
 ## Contribuidores
 
