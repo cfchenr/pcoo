@@ -340,14 +340,6 @@ public class programTest extends PApplet {
 1. Infrastructure (consequentemente Terminal e Dock)
 2. Spot
 
-## Melhoramentos futuros
-
-...
-
-## TODO
-
-* [ ] Criar asserções;
-
 ## Contribuidores
 
 * [cfchenr](https://github.com/cfchenr)
