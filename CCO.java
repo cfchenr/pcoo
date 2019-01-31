@@ -49,6 +49,8 @@ public class CCO implements Runnable {
     // Determina se o @transport tem permição para carregar na sua origem.
     public void slPermition(Transport transport) throws InterruptedException {
 
+        assert transport != null;
+
         sMutex.acquire();
 
         Infrastructure source = transport.gSource();
@@ -74,12 +76,16 @@ public class CCO implements Runnable {
 
         sMutex.release();
 
+        assert (transport.gwPermition() || transport.glPermition());
+
     }
 
     // Determina se o @transport tem permição para descarregar no seu destino
     // (como o transporte nesta fase já chegou ao destino, este passa a ser a sua
     // origem).
     public void suPermition(Transport transport) throws InterruptedException {
+
+        assert transport != null;
 
         sMutex.acquire();
 
@@ -106,10 +112,14 @@ public class CCO implements Runnable {
 
         sMutex.release();
 
+        assert (transport.gwPermition() || transport.glPermition());
+
     }
 
     // Define o serviço para o @transport.
     public void sServices(Transport transport) throws InterruptedException {
+
+        assert transport != null;
 
         sMutex.acquire();
 
@@ -177,6 +187,8 @@ public class CCO implements Runnable {
 
         sMutex.release();
 
+        assert (transport.gServices() || !transport.gServices());
+
     }
 
     // Retorna a lista de infraestruturas gerenciadas por este cco.
@@ -189,14 +201,27 @@ public class CCO implements Runnable {
     // Adiciona a @infrastructure para ser gerenciado por este cco.
     public void aInfrastructure(Infrastructure infrastructure) {
 
+        assert infrastructure != null;
+
+        int size = gInfrastructures().size();
+
         gInfrastructures().add(infrastructure);
+
+        assert (gInfrastructures().size() == size + 1 && gInfrastructures().contains(infrastructure));
 
     }
 
     // Remove a @infrastructure, deixando este de ser gerenciado por este cco.
     public void rInfrastructure(Infrastructure infrastructure) {
 
+        assert infrastructure != null;
+        assert (gInfrastructures().size() > 0 && gInfrastructures().contains(infrastructure));
+
+        int size = gInfrastructures().size();
+
         gInfrastructures().remove(infrastructure);
+
+        assert (gInfrastructures().size() == size - 1 && !gInfrastructures().contains(infrastructure));
 
     }
 
@@ -211,14 +236,27 @@ public class CCO implements Runnable {
     // Adiciona o @transport para ser gerenciado por este cco.
     public void aTransport(Transport transport) {
 
+        assert transport != null;
+
+        int size = gTransports().size();
+
         gTransports().add(transport);
+
+        assert (gTransports().size() == size + 1 && gTransports().contains(transport));
 
     }
 
     // Remove o @transport, deixando este de ser gerenciado por este cco.
     public void rTransport(Transport transport) {
 
+        assert transport != null;
+        assert (gTransports().size() > 0 && gTransports().contains(transport));
+
+        int size = gTransports().size();
+
         gTransports().remove(transport);
+
+        assert (gTransports().size() == size - 1 && !gTransports().contains(transport));
 
     }
 

@@ -34,7 +34,11 @@ public class Infrastructure {
     // Define o nome desta infraestrutura.
     private void sName(String name) {
 
+        assert name != null;
+
         this.name = name;
+
+        assert gName().equals(name);
 
     }
 
@@ -48,7 +52,11 @@ public class Infrastructure {
     // Define o local de carregamento desta infraestrutura.
     private void slSpot(Spot lSpot) {
 
+        assert lSpot != null;
+
         this.lSpot = lSpot;
+
+        assert glSpot() == lSpot;
 
     }
 
@@ -62,7 +70,11 @@ public class Infrastructure {
     // Define o local de descarregamento desta infraestrutura.
     private void suSpot(Spot uSpot) {
 
+        assert uSpot != null;
+
         this.uSpot = uSpot;
+
+        assert guSpot() == uSpot;
 
     }
 
@@ -76,7 +88,11 @@ public class Infrastructure {
     // Define a lista de containers a carregar desta infraestrutura.
     private void slContainers(ArrayList<Container> lContainers) {
 
+        assert lContainers != null;
+
         this.lContainers = lContainers;
+
+        assert glContainers() == lContainers;
 
     }
 
@@ -90,7 +106,11 @@ public class Infrastructure {
     // Define a lista de containers a descarregar desta infraestrutura.
     private void suContainers(ArrayList<Container> uContainers) {
 
+        assert uContainers != null;
+
         this.uContainers = uContainers;
+
+        assert guContainers() == uContainers;
 
     }
 
@@ -104,7 +124,11 @@ public class Infrastructure {
     // Define a posição desta infraestutura.
     private void sPosition(Position position) {
 
+        assert position != null;
+
         this.position = position;
+
+        assert gPosition() == position;
 
     }
 
@@ -118,7 +142,11 @@ public class Infrastructure {
     // Definir a infraestrutura como fechada ou aberta.
     public void sClose(boolean tf) throws InterruptedException {
 
+        assert (tf || !tf);
+
         close = tf;
+
+        assert ((gClose() && tf) || (!gClose() && !tf));
 
     }
 
@@ -131,6 +159,8 @@ public class Infrastructure {
 
     // Obter e reservar os contentores a mover.
     public boolean ghmContainers(Transport transport) throws InterruptedException {
+
+        assert transport != null;
 
         boolean check = false;
 
@@ -262,6 +292,8 @@ public class Infrastructure {
 
         }
 
+        assert (check || !check);
+
         return check;
 
     }
@@ -283,7 +315,11 @@ public class Infrastructure {
     // Reserva o local de carregamento para o @transport.
     public void srlSpot(Transport transport) {
 
+        assert transport != null;
+
         lSpot.sReserve(transport);
+
+        assert grlSpot() == transport;
 
     }
 
@@ -297,7 +333,11 @@ public class Infrastructure {
     // Reserva o local de descarregamento para o @transport.
     public void sruSpot(Transport transport) {
 
+        assert transport != null;
+
         uSpot.sReserve(transport);
+
+        assert gruSpot() == transport;
 
     }
 
@@ -312,6 +352,8 @@ public class Infrastructure {
     // "null".
     private void suContainers(Transport transport) throws InterruptedException {
 
+        assert transport != null;
+
         for (int i = 0; i < transport.gContainers().size(); i++)
             transport.gContainers().get(i).sTransport(null);
 
@@ -323,6 +365,8 @@ public class Infrastructure {
     // algoritmo remove os contentores da lista de carregamentos e adiciona-os ao
     // transporte em causa.
     public void sLoad(Transport transport) throws InterruptedException {
+
+        assert transport != null;
 
         slMutex.acquire();
         glSpot().aTransport(transport);
@@ -378,10 +422,14 @@ public class Infrastructure {
         glSpot().rTransport();
         slMutex.release();
 
+        assert transport.gContainers().size() > 0;
+
     }
 
     // Descarrega o transporte.
     public void sUnload(Transport transport) throws InterruptedException {
+
+        assert transport != null;
 
         suMutex.acquire();
         // Informa que o transporte chegou ao local de descarregamento.
@@ -412,19 +460,31 @@ public class Infrastructure {
         guSpot().rTransport();
         suMutex.release();
 
+        assert transport.isEmpty();
+
     }
 
     // Adiciona contentores para carregar, a esta infraestrutura.
     public void alContainers(ArrayList<Container> containers) {
 
+        assert containers != null;
+
+        int size = glContainers().size();
+
         for (int i = 0; i < containers.size(); i++)
             glContainers().add(containers.get(i));
+
+        assert (glContainers().size() == size + containers.size());
 
     }
 
     public void sCCO(CCO cco) {
 
+        assert cco != null;
+
         this.cco = cco;
+
+        assert gCCO() == cco;
 
     }
 
@@ -438,7 +498,11 @@ public class Infrastructure {
     // Define o tipo desta infraestrutura.
     public void sType(String type) {
 
+        assert type != null;
+
         this.type = type;
+
+        assert gType().equals(type);
 
     }
 

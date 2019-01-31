@@ -24,7 +24,11 @@ public class Spot {
     // Definir o número do local.
     public void sNumber(int number) {
 
+        assert number >= 0;
+
         this.number = number;
+
+        assert gNumber() == number;
 
     }
 
@@ -38,7 +42,11 @@ public class Spot {
     // Definir o local como ocupado.
     public void sBusy(boolean busy) {
 
+        assert (busy || !busy);
+
         this.busy = busy;
+
+        assert ((gBusy()&& busy) || (!gBusy() && !busy));
 
     }
 
@@ -54,6 +62,8 @@ public class Spot {
 
         this.transport = transport;
 
+        assert gTransport() == transport;
+
     }
 
     // Obter o transporte neste local.
@@ -68,6 +78,8 @@ public class Spot {
 
         reserve = transport;
 
+        assert gReserve() == transport;
+
     }
 
     // Obter o transporte para o qual o local está reservado.
@@ -80,19 +92,27 @@ public class Spot {
     // Adiciona o transporte a este local, atualizando o estado de ocupação do local.
     public void aTransport(Transport transport) {
 
+        assert transport != null;
+
         semaphoreTransport.acquire();
         sBusy(true);
         sTransport(transport);
+
+        assert gTransport() == transport;
 
     }
 
     // Remove o transporte deste local, bem como a reserva e o estado de ocupação.
     public void rTransport() {
 
+        assert gTransport() != null;
+
         sReserve(null);
         sTransport(null);
         sBusy(false);
         semaphoreTransport.release();
+
+        assert gTransport() == null;
 
     }
 

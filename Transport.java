@@ -13,7 +13,7 @@ public class Transport implements Runnable {
     private String state;
     private String type;
 
-    public Transport(int number, Infrastructure source, Infrastructure destination, CCO cco) {
+    public Transport(int number, Infrastructure source, CCO cco) {
 
         sState("init");
         sNumber(number);
@@ -101,10 +101,17 @@ public class Transport implements Runnable {
     // Mudança de direção, ou seja, o seu destino passa a ser a origem e vice-versa.
     public void cDirection() throws InterruptedException {
 
+        assert gSource() != gDestination();
+
+        Infrastructure temp1 = gSource();
+        Infrastructure temp2 = gDestination();
+
         Thread.sleep((long) (1250));
         Infrastructure temp = gSource();
         sSource(gDestination());
         sDestination(temp);
+
+        assert (gSource() == temp2 && gDestination() == temp1);
 
     }
 
@@ -123,7 +130,11 @@ public class Transport implements Runnable {
     // Define o número do transporte.
     public void sNumber(int number) {
 
+        assert number >= 0;
+
         this.number = number;
+
+        assert gNumber() == number;
 
     }
 
@@ -137,7 +148,11 @@ public class Transport implements Runnable {
     // Define a origem do transporte.
     public void sSource(Infrastructure source) {
 
+        assert source != null;
+
         this.source = source;
+
+        assert gSource() == source;
 
     }
 
@@ -153,6 +168,8 @@ public class Transport implements Runnable {
 
         this.destination = destination;
 
+        assert gDestination() == destination;
+
     }
 
     // Obtém o destino do transporte.
@@ -165,7 +182,11 @@ public class Transport implements Runnable {
     // Define a posição do transporte.
     public void sPosition(Position position) {
 
+        assert position != null;
+
         this.position = position;
+
+        assert gPosition() == position;
 
     }
 
@@ -179,7 +200,11 @@ public class Transport implements Runnable {
     // Define o estado do transporte.
     public void sState(String state) {
 
+        assert state != null;
+
         this.state = state;
+
+        assert gState().equals(state);
 
     }
 
@@ -193,8 +218,12 @@ public class Transport implements Runnable {
     // Definir o estado dos serviços deste transporte.
     public void sServices(boolean tf) {
 
+        assert (tf || !tf);
+
         ssServices(tf);
         sdServices(!tf);
+
+        assert (gsServices() || gdServices());
 
     }
 
@@ -203,6 +232,8 @@ public class Transport implements Runnable {
 
         ssServices(false);
         sdServices(false);
+
+        assert (!gsServices() && ! gdServices());
 
     }
 
@@ -216,7 +247,11 @@ public class Transport implements Runnable {
     // Definir o estado dos serviços na origem deste transporte.
     public void ssServices(boolean tf) {
 
+        assert (tf || !tf);
+
         sServices = tf;
+
+        assert ((gsServices() && tf) || (!gsServices() && !tf));
 
     }
 
@@ -230,7 +265,11 @@ public class Transport implements Runnable {
     // Definir o estado dos serviços no destino deste transporte.
     public void sdServices(boolean tf) {
 
+        assert (tf || !tf);
+
         dServices = tf;
+
+        assert ((gdServices() && tf) || (!gdServices() && !tf));
 
     }
 
@@ -244,7 +283,11 @@ public class Transport implements Runnable {
     // Definir a permição para carregar.
     public void slPermition(boolean tf) {
 
+        assert (tf || !tf);
+
         permitionToLoad = tf;
+
+        assert ((glPermition() && tf) || (!glPermition() && !tf));
 
     }
 
@@ -258,7 +301,11 @@ public class Transport implements Runnable {
     // Definir a permição para descarregar.
     public void suPermition(boolean tf) {
 
+        assert (tf || !tf);
+
         permitionToUnload = tf;
+
+        assert ((guPermition() && tf) || (!guPermition() && !tf));
 
     }
 
@@ -272,7 +319,11 @@ public class Transport implements Runnable {
     // Definir a permição para esperar.
     public void swPermition(boolean tf) {
 
+        assert (tf || !tf);
+
         permitionToWait = tf;
+
+        assert ((gwPermition() && tf) || (!gwPermition() && !tf));
 
     }
 
@@ -286,7 +337,11 @@ public class Transport implements Runnable {
     // Definir a lista de contentores deste transporte.
     public void sContainers(Stack<Container> containers) {
 
+        assert containers != null;
+
         this.containers = containers;
+
+        assert gContainers() == containers;
 
     }
 
@@ -300,21 +355,39 @@ public class Transport implements Runnable {
     // Adicionar um contentor a este transporte.
     public void aContainer(Container contentor) {
 
+        assert contentor != null;
+
+        int size = gContainers().size();
+
         gContainers().push(contentor);
+
+        assert (gContainers().size() == size + 1 && gContainers().contains(contentor));
 
     }
 
     // Remover um contentor a este transporte.
     public Container rContainer () {
 
-        return gContainers().pop();
+        assert gContainers().size() > 0;
+
+        int size = gContainers().size();
+
+        Container temp = gContainers().pop();
+
+        assert (gContainers().size() == size - 1 && !gContainers().contains(temp));
+
+        return temp;
 
     }
 
     // Definir o número máximo de contentores deste transporte.    
     public void smContainers(int mContainers) {
 
+        assert mContainers > 0;
+
         this.mContainers = mContainers;
+
+        assert gmContainers() == mContainers;
 
     }
 
@@ -328,7 +401,11 @@ public class Transport implements Runnable {
     // Definir a velocidade deste transporte.
     public void sVelocity(int velocity) {
 
+        assert velocity > 0;
+
         this.velocity = velocity;
+
+        assert gVelocity() == velocity;
 
     }
 
@@ -342,7 +419,11 @@ public class Transport implements Runnable {
     // Definir o CCO que gere deste transporte.
     public void sCCO(CCO cco) {
 
+        assert cco != null;
+
         this.cco = cco;
+
+        assert gCCO() == cco;
 
     }
 
@@ -356,7 +437,11 @@ public class Transport implements Runnable {
     // Define o tipo deste transporte.
     public void sType(String type) {
 
+        assert type != null;
+
         this.type = type;
+
+        assert gType().equals(type);
 
     }
 

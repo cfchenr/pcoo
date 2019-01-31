@@ -18,7 +18,11 @@ public class Container {
     // Define o número deste contentore.
     private void sNumber(int number) {
 
+        assert number >= 0;
+
         this.number = number;
+
+        assert gNumber() == number;
 
     }
 
@@ -32,7 +36,11 @@ public class Container {
     // Define o destino deste contentore.
     private void sDestination(Infrastructure destination) {
 
+        assert destination != null;
+
         this.destination = destination;
+
+        assert gDestination() == destination;
 
     }
 
@@ -47,6 +55,8 @@ public class Container {
     public void sTransport(Transport transport) {
 
         this.transport = transport;
+
+        assert gTransport() == transport;
 
     }
 

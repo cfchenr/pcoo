@@ -102,13 +102,13 @@ public class World implements Runnable {
             int cityId;
 
             do {
-                
+
                 check = true;
                 cityId = (int) (Math.random() * citys.length);
 
                 for (int j = 0; j < infrastructures.size(); j++)
 
-                    if (infrastructures.get(j).equals(citys[cityId])) {
+                    if (infrastructures.get(j).gName().equals(citys[cityId])) {
 
                         check = false;
                         break;
@@ -155,20 +155,12 @@ public class World implements Runnable {
         for (int i = 0; i < numberTransports; i++) {
 
             int cityId;
-            int increment;
 
             do {
 
-                do {
+                cityId = (int) (Math.random() * (infrastructures.size() - 1));
 
-                    cityId = (int) (Math.random() * (infrastructures.size() - 1));
-                    increment = (int) (Math.random() * 10);
-                    while (increment >= infrastructures.size())
-                        increment -= infrastructures.size();
-
-                } while (cityId == increment);
-
-            } while (cityId >= infrastructures.size() && increment >= infrastructures.size());
+            } while (cityId >= infrastructures.size());
 
             try {
 
@@ -176,20 +168,20 @@ public class World implements Runnable {
 
                 if (dec > 0.5)
 
-                    transports.add(new Thread(new Truck(++transportNumber, infrastructures.get(cityId),
-                            infrastructures.get(increment), cco), Integer.toString(transportNumber)));
+                    transports.add(new Thread(new Truck(++transportNumber, infrastructures.get(cityId), cco),
+                            Integer.toString(transportNumber)));
 
                 else {
 
                     if (infrastructures.get(cityId).gType() == "Terminal")
 
-                        transports.add(new Thread(new Train(++transportNumber, infrastructures.get(cityId),
-                                infrastructures.get(increment), cco), Integer.toString(transportNumber)));
+                        transports.add(new Thread(new Train(++transportNumber, infrastructures.get(cityId), cco),
+                                Integer.toString(transportNumber)));
 
                     else if (infrastructures.get(cityId).gType() == "Dock")
 
-                        transports.add(new Thread(new Ship(++transportNumber, infrastructures.get(cityId),
-                                infrastructures.get(increment), cco), Integer.toString(transportNumber)));
+                        transports.add(new Thread(new Ship(++transportNumber, infrastructures.get(cityId), cco),
+                                Integer.toString(transportNumber)));
 
                 }
 
