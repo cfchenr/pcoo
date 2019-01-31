@@ -85,7 +85,6 @@ public class programTest extends PApplet {
 
 - [Processing](https://processing.org/)
 - [pt.ua.concurrent](http://sweet.ua.pt/mos/pt.ua.concurrent/index.xhtml)
-- [WriteLogFile](https://github.com/cfchenr/WriteLogFile)
 
 ## Fluxo da simulação (Ideia implementada)
 
